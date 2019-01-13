@@ -1,5 +1,6 @@
 package com.sxu.server;
 
+import com.sxu.dao.ReceivedValueDao;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -20,8 +21,10 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf in = (ByteBuf) msg;
-
+        //接收到的16进制数据
         String str = ByteBufUtil.hexDump(in);
+        System.out.println("hex value:" + str);
+        //接收到的16进制数据转化为文本格式
         byte[] b = null;
         try {
             b = Hex.decodeHex(str);
@@ -30,7 +33,12 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
             e.printStackTrace();
         }
         String bStr = new String(b);
-        System.out.println("Server received:" + bStr);
+        System.out.println("text value:" + bStr);
+        try {
+            ReceivedValueDao.insertReceivedValue(str, bStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ctx.write(in);
     }
 
