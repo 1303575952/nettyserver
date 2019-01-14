@@ -1,6 +1,9 @@
 package com.sxu.server;
 
 import com.sxu.dao.ReceivedValueDao;
+import com.sxu.dao.WorkingModelDao;
+import com.sxu.data.WorkingModelData;
+import com.sxu.entity.WorkingModel;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
@@ -22,23 +25,34 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf in = (ByteBuf) msg;
         //接收到的16进制数据
-        String str = ByteBufUtil.hexDump(in);
-        System.out.println("hex value:" + str);
+        String allHexStr = ByteBufUtil.hexDump(in);
+        System.out.println("hex value:" + allHexStr);
+        String needHexStr = allHexStr.substring(12, allHexStr.length() - 14);
+        System.out.println("just need:" + needHexStr);
         //接收到的16进制数据转化为文本格式
         byte[] b = null;
         try {
-            b = Hex.decodeHex(str);
+            b = Hex.decodeHex(needHexStr);
         } catch (DecoderException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        String bStr = new String(b);
-        System.out.println("text value:" + bStr);
+        String needTextStr = new String(b).trim();
+        System.out.println("text value:" + needTextStr);
+        //生成WorkingModel对象
+        WorkingModel workingModel = WorkingModelData.getFieldsFromStr(needTextStr);
+        //workingModel入库
         try {
-            ReceivedValueDao.insertReceivedValue(str, bStr);
+            WorkingModelDao.insertWorkingModel(workingModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //接收到的16进制数据和必要部分转换后的数据（去掉空格等）入库
+        /*try {
+            ReceivedValueDao.insertReceivedValue(allHexStr, needTextStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         ctx.write(in);
     }
 
