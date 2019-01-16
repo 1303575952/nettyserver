@@ -27,14 +27,17 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         //接收到的16进制数据
         String allHexStr = ByteBufUtil.hexDump(in);
         System.out.println("hex value:" + allHexStr);
-        String needHexStr = allHexStr.substring(12, allHexStr.length() - 14);
+
+        /**判断allHexStr是哪种消息
+         * 消息是否可识别，变量个数是否正确，校验结果是否正确
+         */
+        /*String needHexStr = allHexStr.substring(12, allHexStr.length() - 14);
         System.out.println("just need:" + needHexStr);
         //接收到的16进制数据转化为文本格式
         byte[] b = null;
         try {
             b = Hex.decodeHex(needHexStr);
         } catch (DecoderException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         String needTextStr = new String(b).trim();
@@ -46,7 +49,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
             WorkingModelDao.insertWorkingModel(workingModel);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         //接收到的16进制数据和必要部分转换后的数据（去掉空格等）入库
         /*try {
             ReceivedValueDao.insertReceivedValue(allHexStr, needTextStr);
