@@ -41,6 +41,23 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    /**
+     * 定期推送同步信号
+     *
+     * @param ctx
+     * @throws Exception
+     */
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        while (true) {
+            ByteBuf time = ctx.alloc().buffer(6); //为ByteBuf分配六个字节
+            String synStr = "EB905320160A";
+            time.writeBytes(synStr.getBytes());
+            ctx.writeAndFlush(time);
+            Thread.sleep(30);
+        }
+    }
+
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);

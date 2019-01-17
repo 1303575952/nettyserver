@@ -1,6 +1,7 @@
 package com.sxu.data;
 
 import com.sxu.constant.FaultConstant;
+import com.sxu.constant.SynConstant;
 import com.sxu.dao.WorkingModelDao;
 import com.sxu.entity.WorkingModel;
 import org.apache.commons.codec.DecoderException;
@@ -38,12 +39,11 @@ public class FrameHelper {
         } else if (FrameCheck.isSynMessage(allHexStr)) {
             //处理同步消息
             //同步计数器重新开始计数
-            //TODO
-            return MessageBack.backSynFrame();
+            SynConstant.isSyn = true;
+            return null;
         } else if (FrameCheck.isFaultMessage(allHexStr)) {
             //处理故障消息
             //故障指令，无故障指令
-            //TODO
             if (allHexStr.startsWith("22204400")) {
                 //无故障指令
                 FaultConstant.isFault = false;
