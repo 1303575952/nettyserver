@@ -8,10 +8,13 @@ public class FrameHelper {
     public static void checkFrame(String allHexStr){
         if(FrameCheck.isColletMessage(allHexStr)){
             //处理采集消息
+            //消息入库，返回采集消息应答帧
         }else if(FrameCheck.isSynMessage(allHexStr)){
             //处理同步消息
+            //同步计数器重新开始计数
         }else if(FrameCheck.isFaultMessage(allHexStr)){
             //处理故障消息
+            //故障指令，无故障指令
         }else{
             //不正常消息
             if(!(allHexStr.startsWith("EB90")||allHexStr.startsWith("22"))){
