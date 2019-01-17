@@ -2,6 +2,7 @@ package com.sxu.server;
 
 import com.sxu.dao.ReceivedValueDao;
 import com.sxu.dao.WorkingModelDao;
+import com.sxu.data.FrameHelper;
 import com.sxu.data.WorkingModelData;
 import com.sxu.entity.WorkingModel;
 import org.apache.commons.codec.DecoderException;
@@ -31,32 +32,10 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         /**判断allHexStr是哪种消息
          * 消息是否可识别，变量个数是否正确，校验结果是否正确
          */
-        /*String needHexStr = allHexStr.substring(12, allHexStr.length() - 14);
-        System.out.println("just need:" + needHexStr);
-        //接收到的16进制数据转化为文本格式
-        byte[] b = null;
-        try {
-            b = Hex.decodeHex(needHexStr);
-        } catch (DecoderException e) {
-            e.printStackTrace();
-        }
-        String needTextStr = new String(b).trim();
-        System.out.println("text value:" + needTextStr);
-        //生成WorkingModel对象
-        WorkingModel workingModel = WorkingModelData.getFieldsFromStr(needTextStr);
-        //workingModel入库
-        try {
-            WorkingModelDao.insertWorkingModel(workingModel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        //接收到的16进制数据和必要部分转换后的数据（去掉空格等）入库
-        /*try {
-            ReceivedValueDao.insertReceivedValue(allHexStr, needTextStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        ctx.write(in);
+        String backStr = FrameHelper.checkFrame(allHexStr);
+        ByteBuf out = null;
+        out.writeBytes(backStr.getBytes());
+        ctx.write(out);
     }
 
     @Override
