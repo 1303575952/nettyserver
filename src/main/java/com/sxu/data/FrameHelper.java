@@ -1,5 +1,6 @@
 package com.sxu.data;
 
+import com.sxu.constant.FaultConstant;
 import com.sxu.dao.WorkingModelDao;
 import com.sxu.entity.WorkingModel;
 import org.apache.commons.codec.DecoderException;
@@ -43,7 +44,14 @@ public class FrameHelper {
             //处理故障消息
             //故障指令，无故障指令
             //TODO
-            return null;
+            if (allHexStr.startsWith("22204400")) {
+                //无故障指令
+                FaultConstant.isFault = false;
+                return MessageBack.backFaultFrame(allHexStr);
+            } else {
+                FaultConstant.isFault = true;
+                return MessageBack.backFaultFrame(allHexStr);
+            }
         } else {
             //不正常消息
             if (!(allHexStr.startsWith("EB90") || allHexStr.startsWith("22"))) {

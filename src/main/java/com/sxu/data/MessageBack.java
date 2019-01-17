@@ -52,4 +52,14 @@ public class MessageBack {
     public static String backDC3Frame(String allHexStr) {
         return allHexStr.replaceAll("EB90222044", "EB90192053");
     }
+
+    /**
+     * 返回接收到正常的故障指令/无故障指令
+     *
+     * @param allHexStr
+     * @return
+     */
+    public static String backFaultFrame(String allHexStr) {
+        return allHexStr.replaceAll("222044", "222053");
+    }
 }

@@ -1,5 +1,6 @@
 package com.sxu.server;
 
+import com.sxu.constant.FaultConstant;
 import com.sxu.dao.ReceivedValueDao;
 import com.sxu.dao.WorkingModelDao;
 import com.sxu.data.FrameHelper;
@@ -32,10 +33,12 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         /**判断allHexStr是哪种消息
          * 消息是否可识别，变量个数是否正确，校验结果是否正确
          */
-        String backStr = FrameHelper.checkFrame(allHexStr);
-        ByteBuf out = null;
-        out.writeBytes(backStr.getBytes());
-        ctx.write(out);
+        if (!FaultConstant.isFault) {
+            String backStr = FrameHelper.checkFrame(allHexStr);
+            ByteBuf out = null;
+            out.writeBytes(backStr.getBytes());
+            ctx.write(out);
+        }
     }
 
     @Override
