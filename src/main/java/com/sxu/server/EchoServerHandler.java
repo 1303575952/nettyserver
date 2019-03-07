@@ -1,16 +1,7 @@
 package com.sxu.server;
 
-import com.sxu.constant.FaultConstant;
-import com.sxu.dao.ReceivedValueDao;
-import com.sxu.dao.WorkingModelDao;
-import com.sxu.data.FrameHelper;
-import com.sxu.data.WorkingModelData;
-import com.sxu.entity.WorkingModel;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
-
+import com.sxu.data.DataProcess;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
@@ -18,7 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
- * @author lifei
+ * @author li
  */
 @ChannelHandler.Sharable
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
@@ -26,36 +17,20 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf in = (ByteBuf) msg;
-        //接收到的16进制数据
-        String allHexStr = ByteBufUtil.hexDump(in);
-        System.out.println("hex value:" + allHexStr);
-
-        /**判断allHexStr是哪种消息
-         * 消息是否可识别，变量个数是否正确，校验结果是否正确
-         */
-        if (!FaultConstant.isFault) {
-            String backStr = FrameHelper.checkFrame(allHexStr);
-            ByteBuf out = null;
-            out.writeBytes(backStr.getBytes());
-            ctx.write(out);
+        //System.out.println("Server received:" + in.toString(CharsetUtil.US_ASCII));
+        int length = in.readableBytes();
+        byte[] array = new byte[length];
+        String[] arrayHex = new String[length];
+        in.getBytes(in.readerIndex(), array);
+        for (int i = 0; i < array.length; i++) {
+            arrayHex[i] = Integer.toHexString(array[i]&0xff);
+            //System.out.println(arrayHex[i]);
         }
-    }
-
-    /**
-     * 定期推送同步信号
-     *
-     * @param ctx
-     * @throws Exception
-     */
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        while (true) {
-            ByteBuf time = ctx.alloc().buffer(6); //为ByteBuf分配六个字节
-            String synStr = "EB905320160A";
-            time.writeBytes(synStr.getBytes());
-            ctx.writeAndFlush(time);
-            Thread.sleep(30);
-        }
+        DataProcess.getAndInsertWorkingData2DB(arrayHex);
+        //测试arrayHex数组里的数能否被Hex2Float解析
+        //int[] bytes = {Integer.parseInt(arrayHex[27],16),Integer.parseInt(arrayHex[28],16),Integer.parseInt(arrayHex[29],16),Integer.parseInt(arrayHex[30],16)};
+        //System.out.println(Hex2Float.bytesToFloat(bytes));
+        ctx.write(in);
     }
 
     @Override

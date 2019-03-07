@@ -1,4 +1,4 @@
-package com.sxu.Utils;
+package com.sxu.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

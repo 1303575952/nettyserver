@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.net.InetSocketAddress;
 
 /**
- * lifei
+ * @author li
  */
 public class EchoServer {
     private final int port;

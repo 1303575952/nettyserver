@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkingModel {
+public class WorkingDataEntity {
     String insertDateTime; //插入时间
     String dataDateTime;//数据时间
     Float inletGasVolume;//入口烟气量
