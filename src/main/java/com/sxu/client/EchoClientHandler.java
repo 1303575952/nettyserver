@@ -72,10 +72,10 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				0x31,0x32,0x3A,0X33,//46 hk_data_44  189
 				0x31,0x32,0x3A,0X33,//47 hk_data_45  193
 				0x20,
-				0x00,0x00,0x00,0X00,
+				0x3A,0xFD,0xA3,0X4A,
 				0x20,
 				0x10};
-    	System.out.println(send_data);
+    	//System.out.println(send_data);
         //ctx.writeAndFlush(Unpooled.copiedBuffer(send_data, CharsetUtil.UTF_8));
 		ctx.writeAndFlush(Unpooled.copiedBuffer(send_data, CharsetUtil.US_ASCII));
     }
@@ -88,7 +88,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf in) throws Exception {
-        //System.out.println("Client received:" + in.toString(CharsetUtil.UTF_8));
-    	System.out.println("Client received:" + in);
+        System.out.println("Client received:" + in.toString(CharsetUtil.UTF_8));
+    	//System.out.println("Client received:" + in);
     }
 }
