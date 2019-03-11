@@ -45,13 +45,13 @@ public class DataProcess {
 //        System.out.println(arrayHex[201]);
 
         String checkedCRC32 = arrayHex[198] + arrayHex[199] + arrayHex[200] + arrayHex[201];
-        //System.out.println(checkedCRC32);
-        //System.out.println(Long.toHexString(crc32.getValue()));
+        System.out.println("接收到的校验数据：" + checkedCRC32);
+        System.out.println("正确的校验数据" + Long.toHexString(crc32.getValue()));
 
-        return ((realCheckCRC32.substring(0,2).equals(arrayHex[198]))||("3f".equals(arrayHex[198])))&&
-                ((realCheckCRC32.substring(2,4).equals(arrayHex[199]))||("3f".equals(arrayHex[199])))&&
-                ((realCheckCRC32.substring(4,6).equals(arrayHex[200]))||("3f".equals(arrayHex[200])))&&
-                ((realCheckCRC32.substring(6).equals(arrayHex[201]))||("3f".equals(arrayHex[201])));
+        return ((realCheckCRC32.substring(0, 2).equals(arrayHex[198])) || ("3f".equals(arrayHex[198]))) &&
+                ((realCheckCRC32.substring(2, 4).equals(arrayHex[199])) || ("3f".equals(arrayHex[199]))) &&
+                ((realCheckCRC32.substring(4, 6).equals(arrayHex[200])) || ("3f".equals(arrayHex[200]))) &&
+                ((realCheckCRC32.substring(6).equals(arrayHex[201])) || ("3f".equals(arrayHex[201])));
         //return checkedCRC32.equals(Long.toHexString(crc32.getValue()));
     }
 

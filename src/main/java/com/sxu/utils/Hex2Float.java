@@ -13,7 +13,7 @@ public class Hex2Float {
             System.out.println(Integer.toHexString(data[i] & 0xff));
         }
 
-        int[] data4 = {0,0,Integer.parseInt("a4",16),Integer.parseInt("41",16)};
+        int[] data4 = {0, 0, Integer.parseInt("a4", 16), Integer.parseInt("41", 16)};
         System.out.println(hexToFloat(data4));
     }
 

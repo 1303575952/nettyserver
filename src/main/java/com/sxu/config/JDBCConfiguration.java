@@ -16,6 +16,7 @@ public class JDBCConfiguration {
      * @return 数据库连接
      */
     static Connection connection = null;
+
     public synchronized static Connection getConn() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         String url = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE_NAME + "?user=" + USER_NAME + "&password=" + PASSWORD + "&useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8";

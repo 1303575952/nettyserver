@@ -72,7 +72,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				0x31,0x32,0x3A,0X33,//46 hk_data_44  189
 				0x31,0x32,0x3A,0X33,//47 hk_data_45  193
 				0x20,
-				0x3A,0xFD,0xA3,0X4A,
+				0x3A,0xFD,0xA3,0X4B,
 				0x20,
 				0x10};
     	//System.out.println(send_data);
