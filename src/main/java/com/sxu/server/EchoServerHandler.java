@@ -3,23 +3,11 @@ package com.sxu.server;
 import com.sxu.constant.Instruction;
 import com.sxu.data.DataProcess;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ByteProcessor;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
-import java.nio.channels.GatheringByteChannel;
-import java.nio.channels.ScatteringByteChannel;
-import java.nio.charset.Charset;
 
 /**
  * @author li
@@ -30,7 +18,6 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf in = (ByteBuf) msg;
-        //System.out.println("Server received:" + in.toString(CharsetUtil.US_ASCII));
         int length = in.readableBytes();
         byte[] array = new byte[length];
         String[] arrayHex = new String[length];
@@ -46,12 +33,24 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
             //拿到工况数据并入库
             DataProcess.getAndInsertWorkingData2DB(arrayHex);
             System.out.println("crc32校验无误");
-            System.out.println(Instruction.JUDGE_SUCCESS_INSTRUCTION);
-            ctx.writeAndFlush(Instruction.JUDGE_SUCCESS_INSTRUCTION);
+
+            byte[] judgeSuccessArr = new byte[Instruction.JUDGE_SUCCESS_INSTRUCTION.length];
+            for (int i = 0; i < judgeSuccessArr.length; i++) {
+                judgeSuccessArr[i] = (byte) Instruction.JUDGE_SUCCESS_INSTRUCTION[i];
+            }
+            ByteBuf judgeSuccessBuf = Unpooled.buffer();
+            judgeSuccessBuf.writeBytes(judgeSuccessArr);
+            ctx.writeAndFlush(judgeSuccessBuf);
         } else {
             System.out.println("crc32校验有误");
-            System.out.println(Instruction.JUDGE_FAULT_INSTRUCTION);
-            ctx.writeAndFlush(Instruction.JUDGE_FAULT_INSTRUCTION);
+
+            byte[] judgeFaultArr = new byte[Instruction.JUDGE_FAULT_INSTRUCTION.length];
+            for (int i = 0; i < judgeFaultArr.length; i++) {
+                judgeFaultArr[i] = (byte) Instruction.JUDGE_FAULT_INSTRUCTION[i];
+            }
+            ByteBuf judgeFaultBuf = Unpooled.buffer();
+            judgeFaultBuf.writeBytes(judgeFaultArr);
+            ctx.writeAndFlush(judgeFaultBuf);
         }
     }
 
