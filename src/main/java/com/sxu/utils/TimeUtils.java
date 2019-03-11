@@ -9,6 +9,10 @@ public class TimeUtils {
      * @return
      */
     public static String getCurrentDateTime(){
+     *
+     * @return
+     */
+    public static String getCurrentDateTime() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(date);
