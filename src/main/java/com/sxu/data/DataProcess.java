@@ -30,20 +30,26 @@ public class DataProcess {
      */
     public static boolean workingDataJudgeCRC32(byte[] array, String[] arrayHex) {
         CRC32 crc32 = new CRC32();
-        byte[] judgeArr = new byte[173];
-        judgeArr[0] = array[23];
-        judgeArr[1] = array[24];
-        judgeArr[2] = array[25];
-        for (int i = 3; i < 173; i++) {
-            judgeArr[i] = array[i + 24];
+
+        byte[] judgeArr = new byte[198];
+        for (int i = 0; i < judgeArr.length; i++) {
+            judgeArr[i] = array[i];
         }
         crc32.update(judgeArr);
         String realCheckCRC32 = Long.toHexString(crc32.getValue());
-//        System.out.println(arrayHex[198]);
-//        System.out.println(arrayHex[199]);
-//        System.out.println(arrayHex[200]);
-//        System.out.println(arrayHex[201]);
 
+        if (arrayHex[198].length() == 1) {
+            arrayHex[198] = "0" + arrayHex[198];
+        }
+        if (arrayHex[199].length() == 1) {
+            arrayHex[199] = "0" + arrayHex[199];
+        }
+        if (arrayHex[200].length() == 1) {
+            arrayHex[200] = "0" + arrayHex[200];
+        }
+        if (arrayHex[201].length() == 1) {
+            arrayHex[201] = "0" + arrayHex[201];
+        }
         String checkedCRC32 = arrayHex[198] + arrayHex[199] + arrayHex[200] + arrayHex[201];
         System.out.println("接收到的校验数据：" + checkedCRC32);
         System.out.println("正确的校验数据" + Long.toHexString(crc32.getValue()));

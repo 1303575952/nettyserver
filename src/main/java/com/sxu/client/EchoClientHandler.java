@@ -22,7 +22,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 0x20,
                 0x44,
                 0x20,
-                0x32, 0x30, 0x31, 0x38, 0x31, 0x32, 0x30, 0x36,   //年月日
+                0x32, 0x30, 0x31, 0x39, 0x31, 0x32, 0x30, 0x36,   //年月日
                 0x20,
                 0x31, 0x32, 0x3A, 0X33, 0X34, 0X3A, 0X35, 0X36, //时：分：秒
                 0X32, 0X35, 0X36,  //256
@@ -75,7 +75,7 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 0x31, 0x32, 0x3A, 0X33,//46 hk_data_44  189
                 0x31, 0x32, 0x3A, 0X33,//47 hk_data_45  193
                 0x20,
-                0x3A, 0xFD, 0xA3, 0X4B,
+                0x40, 0xad, 0xcf, 0X04,
                 0x20,
                 0x10};
         byte[] byteArr = new byte[send_data.length];
