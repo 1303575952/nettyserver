@@ -3,10 +3,13 @@ package com.sxu.data;
 import com.sxu.entity.WorkingDataEntity;
 import com.sxu.service.WorkingDataService;
 import com.sxu.service.impl.WorkingDataServiceImpl;
+import org.apache.log4j.Logger;
 
 import java.util.zip.CRC32;
 
 public class DataProcess {
+    private static final Logger LOGGER = Logger.getLogger(DataProcess.class);
+
     /**
      * 拿到工况数据并入库
      *
@@ -37,22 +40,13 @@ public class DataProcess {
         }
         crc32.update(judgeArr);
         String realCheckCRC32 = Long.toHexString(crc32.getValue());
+        if (realCheckCRC32.length() == 7) {
+            realCheckCRC32 = "0" + realCheckCRC32;
+        }
 
-        if (arrayHex[198].length() == 1) {
-            arrayHex[198] = "0" + arrayHex[198];
-        }
-        if (arrayHex[199].length() == 1) {
-            arrayHex[199] = "0" + arrayHex[199];
-        }
-        if (arrayHex[200].length() == 1) {
-            arrayHex[200] = "0" + arrayHex[200];
-        }
-        if (arrayHex[201].length() == 1) {
-            arrayHex[201] = "0" + arrayHex[201];
-        }
         String checkedCRC32 = arrayHex[198] + arrayHex[199] + arrayHex[200] + arrayHex[201];
-        System.out.println("接收到的校验数据：" + checkedCRC32);
-        System.out.println("正确的校验数据" + Long.toHexString(crc32.getValue()));
+        LOGGER.debug("接收到的校验数据：" + checkedCRC32);
+        LOGGER.debug("正确的校验数据" + realCheckCRC32);
 
         return realCheckCRC32.substring(0, 2).equals(arrayHex[198]) &&
                 realCheckCRC32.substring(2, 4).equals(arrayHex[199]) &&

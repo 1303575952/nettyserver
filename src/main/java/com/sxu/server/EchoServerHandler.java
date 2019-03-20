@@ -8,12 +8,14 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.apache.log4j.Logger;
 
 /**
  * @author li
  */
 @ChannelHandler.Sharable
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOGGER = Logger.getLogger(EchoServerHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -25,14 +27,17 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         //到此为止，array中存放硬件设备发送过来的数据（byte[]）
         for (int i = 0; i < array.length; i++) {
             arrayHex[i] = Integer.toHexString(array[i] & 0xff);
-            //System.out.println(arrayHex[i]);
+            if (arrayHex[i].length() == 1) {
+                arrayHex[i] = "0" + arrayHex[i];
+            }
+            LOGGER.debug("接收到：" + arrayHex[i]);
         }
         //到此为止，arrayHex中存放硬件设备发送过来的数据（字符串，强转int后为16进制）
         //CRC32校验
         if (DataProcess.workingDataJudgeCRC32(array, arrayHex)) {
             //拿到工况数据并入库
             DataProcess.getAndInsertWorkingData2DB(arrayHex);
-            System.out.println("crc32校验无误");
+            LOGGER.debug("crc32校验无误");
 
             byte[] judgeSuccessArr = new byte[Instruction.JUDGE_SUCCESS_INSTRUCTION.length];
             for (int i = 0; i < judgeSuccessArr.length; i++) {
@@ -42,7 +47,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
             judgeSuccessBuf.writeBytes(judgeSuccessArr);
             ctx.writeAndFlush(judgeSuccessBuf);
         } else {
-            System.out.println("crc32校验有误");
+            LOGGER.debug("crc32校验有误");
 
             byte[] judgeFaultArr = new byte[Instruction.JUDGE_FAULT_INSTRUCTION.length];
             for (int i = 0; i < judgeFaultArr.length; i++) {

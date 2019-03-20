@@ -4,11 +4,13 @@ import com.sxu.config.JDBCConfiguration;
 import com.sxu.entity.WorkingDataEntity;
 import com.sxu.service.WorkingDataService;
 import com.sxu.utils.TimeUtils;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class WorkingDataServiceImpl implements WorkingDataService {
+    private static final Logger LOGGER = Logger.getLogger(WorkingDataServiceImpl.class);
 
     public void insertWorkingData(WorkingDataEntity workingDataEntity) throws Exception {
         Connection connection = JDBCConfiguration.getConn();
@@ -118,10 +120,10 @@ public class WorkingDataServiceImpl implements WorkingDataService {
         insertworkingDataEntity.setFloat(47, workingDataEntity.getUnit2GasPressureDifference1());
         insertworkingDataEntity.setFloat(48, workingDataEntity.getUnit2GasPressureDifference2());
         insertworkingDataEntity.setFloat(49, workingDataEntity.getUnit2GasPressureDifference3());
-        System.out.println(insertworkingDataEntity);
+        LOGGER.debug(insertworkingDataEntity);
         insertworkingDataEntity.executeUpdate();
         insertworkingDataEntity.close();
         connection.close();
-        System.out.println("连接关闭");
+        LOGGER.debug("连接关闭");
     }
 }
