@@ -1,20 +1,25 @@
 package com.sxu.client;
 
+import com.sxu.common.MiddleWare;
+import com.sxu.utils.DataConversion;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.CharsetUtil;
+import org.apache.log4j.Logger;
 
-import java.nio.charset.Charset;
+public class ClientHandler extends MiddleWare {
+    private static final Logger LOGGER = Logger.getLogger(ClientHandler.class);
+    private Client client;
 
-/**
- * @author li
- */
-@ChannelHandler.Sharable
-public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
+    public ClientHandler(Client client) {
+        super("client");
+        this.client = client;
+    }
+
+    @Override
+    protected void handlerData(ChannelHandlerContext ctx, Object msg) {
+        LOGGER.debug("client  收到数据： " + DataConversion.Object2HexString(msg));
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -81,7 +86,6 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         byte[] byteArr = new byte[send_data.length];
         for (int i = 0; i < send_data.length; i++) {
             byteArr[i] = (byte)send_data[i];
-            System.out.println("send_data_transform:" + (byte)send_data[i]);
         }
         ByteBuf byteBuf =Unpooled.buffer();
         byteBuf.writeBytes(byteArr);
@@ -89,20 +93,12 @@ public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        ctx.close();
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        client.doConnect();
     }
-
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf in) throws Exception {
-        int length = in.readableBytes();
-        byte[] array = new byte[length];
-        String[] arrayHex = new String[length];
-        in.getBytes(in.readerIndex(), array);
-        for (int i = 0; i < array.length; i++) {
-            arrayHex[i] = Integer.toHexString(array[i] & 0xff);
-            System.out.println("Client received:"+arrayHex[i]);
-        }
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        LOGGER.error(name + "exception :"+ cause.toString());
     }
 }
