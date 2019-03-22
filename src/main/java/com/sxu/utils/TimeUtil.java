@@ -1,9 +1,12 @@
 package com.sxu.utils;
 
+import org.apache.log4j.Logger;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimeUtils {
+public class TimeUtil {
+    private static final Logger LOGGER = Logger.getLogger(TimeUtil.class);
     /**
      * 获取执行此条信息的时间
      * 数据格式为20190320123456
@@ -23,7 +26,7 @@ public class TimeUtils {
      * @return
      */
     public static String getCurrentDateTimeSplitByColon() {
-        String currentDateTime = TimeUtils.getCurrentDateTime();
+        String currentDateTime = TimeUtil.getCurrentDateTime();
         StringBuffer sb = new StringBuffer("");
         sb.append(currentDateTime.substring(0, 10));
         sb.append(":");
@@ -34,6 +37,6 @@ public class TimeUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(TimeUtils.getCurrentDateTimeSplitByColon());
+        System.out.println(TimeUtil.getCurrentDateTimeSplitByColon());
     }
 }

@@ -1,22 +1,16 @@
 package com.sxu.utils;
 
+import org.apache.log4j.Logger;
+
 public class Hex2Float {
+    private static final Logger LOGGER = Logger.getLogger(Hex2Float.class);
 
     /**
-     * @param args 对于IEEE754编码。由float转换为IEEE754编码
-     * @author li
+     * 4个16进制整形转浮点
+     *
+     * @param data
+     * @return
      */
-    public static void main(String[] args) {
-        byte[] data;
-        data = floatToBytes((float) 20.5);
-        for (int i = 0; i < 4; i++) {
-            System.out.println(Integer.toHexString(data[i] & 0xff));
-        }
-
-        int[] data4 = {0, 0, Integer.parseInt("a4", 16), Integer.parseInt("41", 16)};
-        System.out.println(hexToFloat(data4));
-    }
-
     public static float hexToFloat(int[] data) {// 解析4个字节中的数据，按照IEEE754的标准
         int s = 0;// 浮点数的符号
         float f = 0;// 浮点数
@@ -32,7 +26,6 @@ public class Hex2Float {
         } else
             temp = 0;
         e = ((data[3] & 0xff) % 128) * 2 + temp;// 求e
-        // f=((data[2]&0xff)-temp*128+128)/128+(data[1]&0xff)/(128*256)+(data[0]&0xff)/(128*256*256);
         float[] data2 = new float[3];
         data2[0] = data[0] & 0xff;
         data2[1] = data[1] & 0xff;
@@ -62,6 +55,12 @@ public class Hex2Float {
 
     }
 
+    /**
+     * 浮点转4个byte
+     *
+     * @param a
+     * @return
+     */
     public static byte[] floatToBytes(float a) {
         byte[] data = new byte[4];
         if (a == 0) {
@@ -189,5 +188,20 @@ public class Hex2Float {
             data2[i] = data[3 - i];
         }
         return data2;
+    }
+
+    /**
+     * @param args 对于IEEE754编码。由float转换为IEEE754编码
+     * @author li
+     */
+    public static void main(String[] args) {
+        byte[] data;
+        data = floatToBytes((float) 20.5);
+        for (int i = 0; i < 4; i++) {
+            System.out.println(Integer.toHexString(data[i] & 0xff));
+        }
+
+        int[] data4 = {0, 0, Integer.parseInt("a4", 16), Integer.parseInt("41", 16)};
+        System.out.println(hexToFloat(data4));
     }
 }

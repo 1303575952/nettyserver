@@ -1,6 +1,6 @@
 package com.sxu;
 
-import com.sxu.server.EchoServer;
+import com.sxu.server.Server;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ public class NettyserverApplication extends SpringBootServletInitializer impleme
 
     @Override
     public void run(String... args) throws Exception {
-        new EchoServer(8085).start();
+        new Server().start();
     }
 
     //为了打包springboot项目

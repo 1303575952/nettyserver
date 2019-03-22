@@ -1,9 +1,9 @@
 package com.sxu.service.impl;
 
-import com.sxu.config.JDBCConfiguration;
+import com.sxu.db.JDBCConfiguration;
 import com.sxu.entity.WorkingDataEntity;
 import com.sxu.service.WorkingDataService;
-import com.sxu.utils.TimeUtils;
+import com.sxu.utils.TimeUtil;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -71,7 +71,7 @@ public class WorkingDataServiceImpl implements WorkingDataService {
                         "?,?,?,?,?,?,?,?,?,?," +
                         "?,?,?,?,?,?,?,?,?,?," +
                         "?,?,?,?,?,?,?,?,?)");
-        insertworkingDataEntity.setString(1, TimeUtils.getCurrentDateTime());
+        insertworkingDataEntity.setString(1, TimeUtil.getCurrentDateTime());
         insertworkingDataEntity.setString(2, workingDataEntity.getDataDateTime());
         insertworkingDataEntity.setFloat(3, workingDataEntity.getInletGasVolume());
         insertworkingDataEntity.setFloat(4, workingDataEntity.getInletSulphurConcentration());

@@ -1,9 +1,11 @@
-package com.sxu.config;
+package com.sxu.db;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class JDBCConfiguration {
+    private static final Logger LOGGER = Logger.getLogger(JDBCConfiguration.class);
     public static String HOST = "39.96.33.44";
     public static String PORT = "3306";
     public static String DATABASE_NAME = "received_usr_info";
@@ -21,7 +23,7 @@ public class JDBCConfiguration {
         Class.forName("com.mysql.jdbc.Driver");
         String url = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE_NAME + "?user=" + USER_NAME + "&password=" + PASSWORD + "&useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8";
         connection = DriverManager.getConnection(url);
-        System.out.println("成功获取连接");
+        LOGGER.debug("成功获取连接");
         return connection;
     }
 }

@@ -1,10 +1,12 @@
 package com.sxu.constant;
 
-import com.sxu.utils.TimeUtils;
+import com.sxu.utils.TimeUtil;
+import org.apache.log4j.Logger;
 
 import java.util.zip.CRC32;
 
 public class Instruction {
+    private static final Logger LOGGER = Logger.getLogger(Instruction.class);
     //PC端故障信息校验成功握手指令定义
     public static final char[] JUDGE_SUCCESS_INSTRUCTION = {0x22, 0x20, 0x53, 0x06, 0x20, 0xde, 0xdf, 0x33, 0xe0, 0x20, 0x10};
     //PC端故障信息校验失败握手指令定义
@@ -26,7 +28,7 @@ public class Instruction {
                 0x20,
                 0x00, 0x00, 0x00, 0x00,//校验
                 0x20, 0x10};
-        String currentDateTime = TimeUtils.getCurrentDateTime();
+        String currentDateTime = TimeUtil.getCurrentDateTime();
         time_syn_instruction[3] = currentDateTime.charAt(0);
         time_syn_instruction[4] = currentDateTime.charAt(1);
         time_syn_instruction[5] = currentDateTime.charAt(2);
@@ -49,7 +51,6 @@ public class Instruction {
         CRC32 crc32 = new CRC32();
         crc32.update(tsij);
         String tsijCRC32 = Long.toHexString(crc32.getValue());
-        System.out.println(tsijCRC32);
 
         time_syn_instruction[21] = (char) Integer.parseInt(tsijCRC32.substring(0, 2), 16);
         time_syn_instruction[22] = (char) Integer.parseInt(tsijCRC32.substring(2, 4), 16);

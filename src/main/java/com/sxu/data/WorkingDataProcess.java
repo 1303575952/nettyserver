@@ -2,7 +2,7 @@ package com.sxu.data;
 
 import com.sxu.entity.WorkingDataEntity;
 import com.sxu.utils.Hex2Float;
-import com.sxu.utils.TimeUtils;
+import com.sxu.utils.TimeUtil;
 
 public class WorkingDataProcess {
     public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class WorkingDataProcess {
     public static WorkingDataEntity getWorkingDataEntityFromFrame(String[] arrayHex){
         WorkingDataEntity workingDataEntity = new WorkingDataEntity();
         //插入时间
-        String insertDateTime = TimeUtils.getCurrentDateTime();
+        String insertDateTime = TimeUtil.getCurrentDateTime();
         //数据时间
         String dataDateTime = "";
         StringBuffer sb = new StringBuffer();
