@@ -25,11 +25,11 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
         String msgStr = DataConversion.Object2HexString(msg);
         if (msgStr.startsWith(Type.WORKING_DATA_HEAD)) {
             //接收到的消息为工况数据指令
+            LOGGER.debug("接收到工况指令：" + DataConversion.Object2HexString(msg));
             WorkingData.workingDataProcess(msg);
         } else if (msgStr.startsWith(Type.TIME_SYN_HEAD)) {
             //接收到的消息为授时指令
             LOGGER.debug("time syn instruction:" + DataConversion.Object2HexString(msg));
-
         } else if (msgStr.startsWith(Type.TIME_SYN_SUCCESS_HEAD)) {
             //接收到的消息为授时成功指令
         } else if (msgStr.startsWith(Type.TIME_SYN_FAILD_HEAD)) {
@@ -45,8 +45,9 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
      * @param ctx
      */
     protected void sendTimeSynInstruction(ChannelHandlerContext ctx) {
-        byte[] timeSynInstructionByteArr = DataConversion.charArr2ByteArr(Instruction.getTimeSynInstruction());
-        System.out.println("time syn instruction length:" + timeSynInstructionByteArr.length);
+        char[] timeSynInstructionCharArr = Instruction.getTimeSynInstruction();
+        System.out.println("time syn instruction:" + DataConversion.charArr2HexString(timeSynInstructionCharArr));
+        byte[] timeSynInstructionByteArr = DataConversion.charArr2ByteArr(timeSynInstructionCharArr);
         ByteBuf timeSynInstructionBuf = Unpooled.buffer();
         timeSynInstructionBuf.writeBytes(timeSynInstructionByteArr);
         ctx.writeAndFlush(timeSynInstructionBuf);

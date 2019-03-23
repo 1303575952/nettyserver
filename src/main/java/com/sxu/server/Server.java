@@ -27,7 +27,7 @@ public class Server {
 
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .localAddress(8081)
+                    .localAddress(8085)
                     .childHandler(new ChannelInitializer<Channel>() {
 
                         @Override
@@ -37,7 +37,7 @@ public class Server {
                             pipeline.addLast(new ServerHandler());
                         }
                     });
-            System.out.println("start server 8081 --");
+            System.out.println("start server 8085 --");
             ChannelFuture sync = serverBootstrap.bind().sync();
             sync.channel().closeFuture().sync();
         } catch (InterruptedException e) {

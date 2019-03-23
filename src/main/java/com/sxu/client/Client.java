@@ -43,7 +43,7 @@ public class Client {
         if (channel != null && channel.isActive()) {
             return;
         }
-        ChannelFuture connect = bootstrap.connect("127.0.0.1", 8081);
+        ChannelFuture connect = bootstrap.connect("127.0.0.1", 8085);
         //实现监听通道连接的方法
         connect.addListener(new ChannelFutureListener() {
 

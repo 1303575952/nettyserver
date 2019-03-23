@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 
 public class DataConversion {
     private static final Logger LOGGER = Logger.getLogger(DataConversion.class);
+
     /**
      * 接收到的消息转为byte[]
      *
@@ -81,5 +82,29 @@ public class DataConversion {
             }
         }
         return hexStringArr;
+    }
+
+    /**
+     * 16进制形式的String[]转16进制形式的String
+     *
+     * @param hexStringArr
+     * @return
+     */
+    public static String hexStringArr2HexString(String[] hexStringArr) {
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0; i < hexStringArr.length; i++) {
+            sb.append(hexStringArr[i]);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * char[]转16进制形式的String
+     *
+     * @param charArr
+     * @return
+     */
+    public static String charArr2HexString(char[] charArr) {
+        return DataConversion.hexStringArr2HexString(DataConversion.byteArr2HexStringArr(DataConversion.charArr2ByteArr(charArr)));
     }
 }
