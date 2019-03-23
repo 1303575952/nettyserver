@@ -130,13 +130,13 @@ public class WorkingDataProcess {
                 Integer.parseInt(arrayHex[93],16),
                 Integer.parseInt(arrayHex[94],16)});
         //1#循环泵开关状态
-        Float circulatingPump1WitchingState= (float)Integer.parseInt(arrayHex[95],16);
+        Float circulatingPump1WitchingState= Integer.parseInt(arrayHex[95], 16) - 48.0f;
         //2#循环泵开关状态
-        Float circulatingPump2WitchingState= (float)Integer.parseInt(arrayHex[96],16);
+        Float circulatingPump2WitchingState= Integer.parseInt(arrayHex[96], 16) - 48.0f;
         //3#循环泵开关状态
-        Float circulatingPump3WitchingState= (float)Integer.parseInt(arrayHex[97],16);
+        Float circulatingPump3WitchingState= Integer.parseInt(arrayHex[97], 16) - 48.0f;
         //4#循环泵开关状态
-        Float circulatingPump4WitchingState= (float)Integer.parseInt(arrayHex[98],16);
+        Float circulatingPump4WitchingState= Integer.parseInt(arrayHex[98], 16) - 48.0f;
         //5#循环泵开关状态
         Float circulatingPump5WitchingState= (float)Integer.parseInt(arrayHex[99],16);
         //6#循环泵开关状态
