@@ -7,9 +7,6 @@ import org.apache.log4j.Logger;
 
 public class ServerHandler extends MiddleWare {
     private static final Logger LOGGER = Logger.getLogger(ServerHandler.class);
-    public ServerHandler() {
-        super("Server");
-    }
 
     @Override
     protected void handlerAllIdle(ChannelHandlerContext ctx) {

@@ -11,11 +11,6 @@ public class ClientHandler extends MiddleWare {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class);
     private Client client;
 
-    public ClientHandler(Client client) {
-        super("client");
-        this.client = client;
-    }
-
     @Override
     protected void handlerData(ChannelHandlerContext ctx, Object msg) {
         LOGGER.debug("client  收到数据： " + DataConversion.Object2HexString(msg));

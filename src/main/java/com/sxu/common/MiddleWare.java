@@ -1,6 +1,8 @@
 package com.sxu.common;
 
 import com.sxu.constant.Instruction;
+import com.sxu.message.TimeSynFailed;
+import com.sxu.message.TimeSynSuccess;
 import com.sxu.message.WorkingData;
 import com.sxu.utils.DataConversion;
 import io.netty.buffer.ByteBuf;
@@ -16,24 +18,21 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     //记录次数
     private int heartbeatCount = 0;
 
-    public MiddleWare(String name) {
-        this.name = name;
-    }
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String msgStr = DataConversion.Object2HexString(msg);
         if (msgStr.startsWith(Type.WORKING_DATA_HEAD)) {
             //接收到的消息为工况数据指令
-            LOGGER.debug("接收到工况指令：" + DataConversion.Object2HexString(msg));
             WorkingData.workingDataProcess(msg);
         } else if (msgStr.startsWith(Type.TIME_SYN_HEAD)) {
-            //接收到的消息为授时指令
+            //发送的消息为授时指令
             LOGGER.debug("time syn instruction:" + DataConversion.Object2HexString(msg));
         } else if (msgStr.startsWith(Type.TIME_SYN_SUCCESS_HEAD)) {
             //接收到的消息为授时成功指令
+            TimeSynSuccess.timeSynSuccessProcess(ctx, msg);
         } else if (msgStr.startsWith(Type.TIME_SYN_FAILD_HEAD)) {
             //接收到的消息为授时失败指令
+            TimeSynFailed.timeSynFailedProcess(ctx, msg);
         }
     }
 
