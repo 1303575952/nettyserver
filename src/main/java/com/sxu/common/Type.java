@@ -12,4 +12,8 @@ public interface Type {
     String TIME_SYN_SUCCESS_HEAD = "2220440620";
     //授时校验失败指令消息头
     String TIME_SYN_FAILD_HEAD = "2220442120";
+    //服务端发出的同步消息
+    String HEART_BEAT_SERVER = "eb905320160a";
+    //硬件端发出的同步消息
+    String HEART_BEAT_HARDWARE = "eb904420160a";
 }

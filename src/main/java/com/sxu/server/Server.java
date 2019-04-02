@@ -1,5 +1,6 @@
 package com.sxu.server;
 
+import com.sxu.constant.Constants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -33,7 +34,7 @@ public class Server {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new IdleStateHandler(0, 0, 30));
+                            pipeline.addLast(new IdleStateHandler(0, 0, Constants.TIMEGRANULARITY));
                             pipeline.addLast(new ServerHandler());
                         }
                     });

@@ -18,6 +18,7 @@ public class Instruction {
 
     /**
      * 向硬件端发送的授时指令
+     *
      * @return
      */
     public static char[] getTimeSynInstruction() {
@@ -63,6 +64,10 @@ public class Instruction {
 
         return time_syn_instruction;
     }
+    //服务端发出的同步消息
+    public static final char[] HEART_BEAT_SERVER = {0xbe, 0x90, 0x53, 0x20, 0x16, 0x0a};
+    //硬件端发出的同步消息
+    public static final char[] HEART_BEAT_HARDWARE = {0xbe, 0x90, 0x44, 0x20, 0x16, 0x0a};
 
     public static void main(String[] args) {
         char[] ins = Instruction.getTimeSynInstruction();

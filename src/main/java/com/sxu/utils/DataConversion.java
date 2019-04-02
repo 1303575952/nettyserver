@@ -67,6 +67,7 @@ public class DataConversion {
         return byteArr;
     }
 
+
     /**
      * byte[]转String[]
      *
