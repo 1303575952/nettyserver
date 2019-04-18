@@ -1,11 +1,12 @@
-package com.sxu.common;
+package com.huanxin.common;
 
-import com.sxu.message.TimeSynFailed;
-import com.sxu.message.TimeSynSuccess;
-import com.sxu.message.WorkingData;
-import com.sxu.constant.Instruction;
-import com.sxu.utils.DataConversion;
-import com.sxu.utils.Variable;
+import com.huanxin.constant.Constants;
+import com.huanxin.message.TimeSynFailed;
+import com.huanxin.message.TimeSynSuccess;
+import com.huanxin.message.WorkingData;
+import com.huanxin.constant.Instruction;
+import com.huanxin.utils.DataConversion;
+import com.huanxin.utils.Variable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,12 +29,33 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String msgStr = DataConversion.Object2HexString(msg);
+        LOGGER.debug("接收到数据：" + msgStr);
+        LOGGER.debug("msgStr.startsWith(Type.WORKING_DATA_HEAD)--" + msgStr.startsWith(Type.WORKING_DATA_HEAD));
+        LOGGER.debug("msgStr.length() < Constants.WORKING_DATA_LENGTH--" + (msgStr.length() < Constants.WORKING_DATA_LENGTH));
+        LOGGER.debug("Constants.isAssemble--" + Constants.isAssemble);
+        if ((msgStr.startsWith(Type.WORKING_DATA_HEAD) && (msgStr.length() < Constants.WORKING_DATA_LENGTH)) || Constants.isAssemble) {
+            Constants.isAssemble = true;
+            Constants.packingStr = Constants.packingStr.append(msgStr);
+            if (Constants.packingStr.length() == Constants.WORKING_DATA_LENGTH) {
+                //拼包完成
+                LOGGER.debug("拼装后的数据：" + Constants.packingStr);
+
+                byte[] workingDataByteArr = DataConversion.hexStringArr2ByteArr(DataConversion.hexString2HexStringArr(Constants.packingStr.toString()));
+                WorkingData.workingDataProcess(workingDataByteArr);
+                Constants.packingStr = new StringBuffer("");
+                Constants.isAssemble = false;
+            } else if (Constants.packingStr.length() > Constants.WORKING_DATA_LENGTH) {
+                //拼包过长失败
+                Constants.packingStr = new StringBuffer("");
+                Constants.isAssemble = false;
+            }
+        }
         if (msgStr.startsWith(Type.WORKING_DATA_HEAD)) {
             //接收到的消息为工况数据指令
             WorkingData.workingDataProcess(msg);
         } else if (msgStr.startsWith(Type.TIME_SYN_HEAD)) {
             //发送的消息为授时指令
-            LOGGER.debug("time syn instruction:" + DataConversion.Object2HexString(msg));
+            LOGGER.debug("服务端给硬件发授时指令:" + DataConversion.Object2HexString(msg));
         } else if (msgStr.startsWith(Type.TIME_SYN_SUCCESS_HEAD)) {
             //接收到的消息为授时成功指令
             TimeSynSuccess.timeSynSuccessProcess(ctx, msg);
@@ -42,7 +64,10 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
             TimeSynFailed.timeSynFailedProcess(ctx, msg);
         } else if (msgStr.startsWith(Type.HEART_BEAT_SERVER)) {
             //发送的消息为服务端发出的同步指令
-            LOGGER.debug("server syn instruction:" + DataConversion.Object2HexString(msg));
+            LOGGER.debug("服务端给硬件端发心跳:" + DataConversion.Object2HexString(msg));
+        } else if (msgStr.startsWith(Type.HEART_BEAT_HARDWARE)) {
+            //接收到的消息为硬件端发出的同步指令
+            LOGGER.debug("硬件端给服务端发心跳:" + DataConversion.Object2HexString(msg));
         }
     }
 
@@ -60,11 +85,12 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
         timeSynInstructionBuf.writeBytes(timeSynInstructionByteArr);
         ctx.writeAndFlush(timeSynInstructionBuf);
         timeSynCount++;
-        LOGGER.debug("send time syn msg to " + ctx.channel().remoteAddress() + "count :" + timeSynCount);
+        LOGGER.debug("服务端给硬件端发授时:" + DataConversion.hexStringArr2HexString(DataConversion.byteArr2HexStringArr(timeSynInstructionByteArr)) + " " + ctx.channel().remoteAddress() + "count :" + timeSynCount);
     }
 
     /**
      * 服务端发送心跳指令
+     *
      * @param ctx
      */
     public void sendHeartBeat2HardwareInstruction(ChannelHandlerContext ctx) {
@@ -72,7 +98,7 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
         ByteBuf heartBeat2HardwareInstructionBuf = Unpooled.buffer();
         heartBeat2HardwareInstructionBuf.writeBytes(heartBeat2HardwareInstructionByteArr);
         ctx.writeAndFlush(heartBeat2HardwareInstructionBuf);
-        LOGGER.debug("server send heart beat msg to " + ctx.channel().remoteAddress() + "count :" + heartbeatCount);
+        LOGGER.debug("服务端给硬件端发心跳:" + DataConversion.hexStringArr2HexString(DataConversion.byteArr2HexStringArr(heartBeat2HardwareInstructionByteArr)) + " " + ctx.channel().remoteAddress() + "count :" + heartbeatCount);
     }
 
     @Override
@@ -95,11 +121,11 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     }
 
     protected void handlerAllIdle(ChannelHandlerContext ctx) {
-        Variable.timeGranularityFrequency++;
         LOGGER.debug("---ALL_IDLE---");
     }
 
     protected void handlerWriterIdle(ChannelHandlerContext ctx) {
+        Variable.timeGranularityFrequency++;
         LOGGER.debug("---WRITER_IDLE---");
     }
 

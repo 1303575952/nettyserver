@@ -1,7 +1,7 @@
-package com.sxu.message;
+package com.huanxin.message;
 
-import com.sxu.constant.Instruction;
-import com.sxu.utils.DataConversion;
+import com.huanxin.constant.Instruction;
+import com.huanxin.utils.DataConversion;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
@@ -12,7 +12,7 @@ public class TimeSynFailed {
 
         String msgStr = DataConversion.Object2HexString(msg);
         if (DataConversion.charArr2HexString(Instruction.TIME_SYN_FAILED_INSTRUCTION).equals(msgStr)) {
-            LOGGER.debug("time syn failed, try again...");
+            LOGGER.debug("授时失败");
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.sxu.client;
+package com.huanxin.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;

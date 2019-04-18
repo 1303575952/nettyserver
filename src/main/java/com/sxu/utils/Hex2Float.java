@@ -1,4 +1,4 @@
-package com.sxu.utils;
+package com.huanxin.utils;
 
 import org.apache.log4j.Logger;
 

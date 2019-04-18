@@ -1,4 +1,4 @@
-package com.sxu.utils;
+package com.huanxin.utils;
 
 import io.netty.buffer.ByteBuf;
 import org.apache.log4j.Logger;
@@ -86,6 +86,20 @@ public class DataConversion {
     }
 
     /**
+     * String[]转byte[]
+     *
+     * @param strArr
+     * @return
+     */
+    public static byte[] hexStringArr2ByteArr(String[] strArr) {
+        byte[] byteArr = new byte[strArr.length];
+        for (int i = 0; i < strArr.length; i++) {
+            byteArr[i] = (byte) Integer.parseInt(strArr[i], 16);
+        }
+        return byteArr;
+    }
+
+    /**
      * 16进制形式的String[]转16进制形式的String
      *
      * @param hexStringArr
@@ -97,6 +111,20 @@ public class DataConversion {
             sb.append(hexStringArr[i]);
         }
         return sb.toString();
+    }
+
+    /**
+     * 16进制形式的String转16进制形式的String[]
+     *
+     * @param hexString
+     * @return
+     */
+    public static String[] hexString2HexStringArr(String hexString) {
+        String[] strArr = new String[hexString.length() / 2];
+        for (int i = 0; i < hexString.length() / 2; i++) {
+            strArr[i] = String.valueOf(hexString.charAt(2 * i)) + String.valueOf(hexString.charAt(2 * i + 1));
+        }
+        return strArr;
     }
 
     /**

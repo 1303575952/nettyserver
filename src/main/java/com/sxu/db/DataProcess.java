@@ -1,9 +1,9 @@
-package com.sxu.db;
+package com.huanxin.db;
 
-import com.sxu.data.WorkingDataProcess;
-import com.sxu.entity.WorkingDataEntity;
-import com.sxu.service.WorkingDataService;
-import com.sxu.service.impl.WorkingDataServiceImpl;
+import com.huanxin.data.WorkingDataProcess;
+import com.huanxin.entity.WorkingDataEntity;
+import com.huanxin.service.WorkingDataService;
+import com.huanxin.service.impl.WorkingDataServiceImpl;
 import org.apache.log4j.Logger;
 
 public class DataProcess {

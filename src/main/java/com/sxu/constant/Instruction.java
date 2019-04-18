@@ -1,6 +1,6 @@
-package com.sxu.constant;
+package com.huanxin.constant;
 
-import com.sxu.utils.TimeUtil;
+import com.huanxin.utils.TimeUtil;
 import org.apache.log4j.Logger;
 
 import java.util.zip.CRC32;
@@ -12,9 +12,9 @@ public class Instruction {
     //PC端故障信息校验失败握手指令定义
     public static final char[] JUDGE_FAULT_INSTRUCTION = {0x22, 0x20, 0x53, 0x21, 0x20, 0x04, 0x1a, 0x81, 0x85, 0x20, 0x10};
     //硬件端接受授时指令校验成功握手指令定义
-    public static final char[] TIME_SYN_SUCCESS_INSTRUCTION = {0x22, 0x20, 0x44, 0x06, 0x20, 0xc7, 0xb6, 0x86, 0x15, 0x20, 0x10};
+    public static final char[] TIME_SYN_SUCCESS_INSTRUCTION = {0x22, 0x20, 0x44, 0x06, 0x20, 0xc7, 0xb6, 0x86, 0x15, 0x20, 0x0a};
     //硬件端接受授时指令校验失败握手指令定义
-    public static final char[] TIME_SYN_FAILED_INSTRUCTION = {0x22, 0x20, 0x44, 0x21, 0x20, 0x1d, 0x73, 0x34, 0x70, 0x20, 0x10};
+    public static final char[] TIME_SYN_FAILED_INSTRUCTION = {0x22, 0x20, 0x44, 0x21, 0x20, 0x1d, 0x73, 0x34, 0x70, 0x20, 0x0a};
 
     /**
      * 向硬件端发送的授时指令
@@ -32,7 +32,7 @@ public class Instruction {
                 0x00, 0x00,//秒，例53
                 0x20,
                 0x00, 0x00, 0x00, 0x00,//校验
-                0x20, 0x10};
+                0x20, 0x0a};
         String currentDateTime = TimeUtil.getCurrentDateTime();
         time_syn_instruction[3] = currentDateTime.charAt(0);
         time_syn_instruction[4] = currentDateTime.charAt(1);
@@ -65,9 +65,9 @@ public class Instruction {
         return time_syn_instruction;
     }
     //服务端发出的同步消息
-    public static final char[] HEART_BEAT_SERVER = {0xbe, 0x90, 0x53, 0x20, 0x16, 0x0a};
+    public static final char[] HEART_BEAT_SERVER = {0xeb, 0x90, 0x53, 0x20, 0x16, 0x0a};
     //硬件端发出的同步消息
-    public static final char[] HEART_BEAT_HARDWARE = {0xbe, 0x90, 0x44, 0x20, 0x16, 0x0a};
+    public static final char[] HEART_BEAT_HARDWARE = {0xeb, 0x90, 0x44, 0x20, 0x16, 0x0a};
 
     public static void main(String[] args) {
         char[] ins = Instruction.getTimeSynInstruction();

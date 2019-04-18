@@ -1,4 +1,4 @@
-package com.sxu.utils;
+package com.huanxin.utils;
 
 import org.apache.log4j.Logger;
 
@@ -36,7 +36,14 @@ public class TimeUtil {
         return sb.toString();
     }
 
+    public static String getCurrentDateTimeSplitByHyphenAndColon(){
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateTime = sdf.format(date);
+        return dateTime;
+    }
+
     public static void main(String[] args) {
-        System.out.println(TimeUtil.getCurrentDateTimeSplitByColon());
+        System.out.println(TimeUtil.getCurrentDateTimeSplitByHyphenAndColon());
     }
 }

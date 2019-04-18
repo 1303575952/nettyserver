@@ -1,129 +1,167 @@
-package com.sxu.service.impl;
+package com.huanxin.service.impl;
 
-import com.sxu.service.WorkingDataService;
-import com.sxu.db.JDBCConfiguration;
-import com.sxu.entity.WorkingDataEntity;
-import com.sxu.utils.TimeUtil;
+import com.huanxin.db.MongoDBConfiguration;
+import com.huanxin.service.WorkingDataService;
+import com.huanxin.entity.WorkingDataEntity;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.apache.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import org.bson.Document;
 
 public class WorkingDataServiceImpl implements WorkingDataService {
+
     private static final Logger LOGGER = Logger.getLogger(WorkingDataServiceImpl.class);
 
     public void insertWorkingData(WorkingDataEntity workingDataEntity) throws Exception {
-        Connection connection = JDBCConfiguration.getConn();
-        PreparedStatement insertworkingDataEntity = connection.prepareStatement(
-                "insert into working_data (" +
-                        "insert_date_time,\n" +
-                        "data_date_time,\n" +
-                        "inlet_gas_volume,\n" +
-                        "inlet_sulphur_concentration,\n" +
-                        "inlet_o2_concentration,\n" +
-                        "inlet_gas_temperature,\n" +
-                        "inlet_gas_humidity,\n" +
-                        "pulp_supply,\n" +
-                        "limestone_slurry_density,\n" +
-                        "ph,\n" +
-                        "outlet_gas_volume,\n" +
-                        "outlet_sulphur_concentration,\n" +
-                        "outlet_o2_concentration,\n" +
-                        "outlet_gas_temperature,\n" +
-                        "outlet_gas_humidity,\n" +
-                        "inlet_gas_pressure,\n" +
-                        "outlet_gas_pressure,\n" +
-                        "inlet_gas_dust_degree,\n" +
-                        "outlet_gas_dust_degree,\n" +
-                        "circulating_pump1_witching_state,\n" +
-                        "circulating_pump2_witching_state,\n" +
-                        "circulating_pump3_witching_state,\n" +
-                        "circulating_pump4_witching_state,\n" +
-                        "circulating_pump5_witching_state,\n" +
-                        "circulating_pump6_witching_state,\n" +
-                        "unit1_scr_outleta_o2_concentration,\n" +
-                        "unit1_scr_outleta_nox_concentration,\n" +
-                        "unit1_scr_outleta_gas_temperature,\n" +
-                        "unit1_scr_outleta_nh3_concentration,\n" +
-                        "unit1_nh3_flow,\n" +
-                        "unit1_scr_aaig_flue_flow,\n" +
-                        "unit1_scr_aaig_flue_o2_concentration,\n" +
-                        "unit1_scr_aaig_flue_nox_concentration,\n" +
-                        "unit1_scr_aaig_flue_gas_temperature,\n" +
-                        "unit1_gas_pressure_difference1,\n" +
-                        "unit1_gas_pressure_difference2,\n" +
-                        "unit1_gas_pressure_difference3,\n" +
-                        "unit2_scr_outleta_o2_concentration,\n" +
-                        "unit2_scr_outleta_nox_concentration,\n" +
-                        "unit2_scr_outleta_gas_temperature,\n" +
-                        "unit2_scr_outleta_nh3_concentration,\n" +
-                        "unit2_nh3_flow,\n" +
-                        "unit2_scr_aaig_flue_flow,\n" +
-                        "unit2_scr_aaig_flue_o2_concentration,\n" +
-                        "unit2_scr_aaig_flue_nox_concentration,\n" +
-                        "unit2_scr_aaig_flue_gas_temperature,\n" +
-                        "unit2_gas_pressure_difference1,\n" +
-                        "unit2_gas_pressure_difference2,\n" +
-                        "unit2_gas_pressure_difference3" +
-                        ") " +
-                        "values (?,?,?,?,?,?,?,?,?,?," +
-                        "?,?,?,?,?,?,?,?,?,?," +
-                        "?,?,?,?,?,?,?,?,?,?," +
-                        "?,?,?,?,?,?,?,?,?,?," +
-                        "?,?,?,?,?,?,?,?,?)");
-        insertworkingDataEntity.setString(1, TimeUtil.getCurrentDateTime());
-        insertworkingDataEntity.setString(2, workingDataEntity.getDataDateTime());
-        insertworkingDataEntity.setFloat(3, workingDataEntity.getInletGasVolume());
-        insertworkingDataEntity.setFloat(4, workingDataEntity.getInletSulphurConcentration());
-        insertworkingDataEntity.setFloat(5, workingDataEntity.getInletO2Concentration());
-        insertworkingDataEntity.setFloat(6, workingDataEntity.getInletGasTemperature());
-        insertworkingDataEntity.setFloat(7, workingDataEntity.getInletGasHumidity());
-        insertworkingDataEntity.setFloat(8, workingDataEntity.getPulpSupply());
-        insertworkingDataEntity.setFloat(9, workingDataEntity.getLimestoneSlurryDensity());
-        insertworkingDataEntity.setFloat(10, workingDataEntity.getPh());
-        insertworkingDataEntity.setFloat(11, workingDataEntity.getOutletGasVolume());
-        insertworkingDataEntity.setFloat(12, workingDataEntity.getOutletSulphurConcentration());
-        insertworkingDataEntity.setFloat(13, workingDataEntity.getOutletO2Concentration());
-        insertworkingDataEntity.setFloat(14, workingDataEntity.getOutletGasTemperature());
-        insertworkingDataEntity.setFloat(15, workingDataEntity.getOutletGasHumidity());
-        insertworkingDataEntity.setFloat(16, workingDataEntity.getInletGasPressure());
-        insertworkingDataEntity.setFloat(17, workingDataEntity.getOutletGasPressure());
-        insertworkingDataEntity.setFloat(18, workingDataEntity.getInletGasDustDegree());
-        insertworkingDataEntity.setFloat(19, workingDataEntity.getOutletGasDustDegree());
-        insertworkingDataEntity.setFloat(20, workingDataEntity.getCirculatingPump1WitchingState());
-        insertworkingDataEntity.setFloat(21, workingDataEntity.getCirculatingPump2WitchingState());
-        insertworkingDataEntity.setFloat(22, workingDataEntity.getCirculatingPump3WitchingState());
-        insertworkingDataEntity.setFloat(23, workingDataEntity.getCirculatingPump4WitchingState());
-        insertworkingDataEntity.setFloat(24, workingDataEntity.getCirculatingPump5WitchingState());
-        insertworkingDataEntity.setFloat(25, workingDataEntity.getCirculatingPump6WitchingState());
-        insertworkingDataEntity.setFloat(26, workingDataEntity.getUnit1ScrOutletaO2Concentration());
-        insertworkingDataEntity.setFloat(27, workingDataEntity.getUnit1ScrOutletaNoxConcentration());
-        insertworkingDataEntity.setFloat(28, workingDataEntity.getUnit1ScrOutletaGasTemperature());
-        insertworkingDataEntity.setFloat(29, workingDataEntity.getUnit1ScrOutletaNh3Concentration());
-        insertworkingDataEntity.setFloat(30, workingDataEntity.getUnit1Nh3Flow());
-        insertworkingDataEntity.setFloat(31, workingDataEntity.getUnit1ScrAaigFlueFlow());
-        insertworkingDataEntity.setFloat(32, workingDataEntity.getUnit1ScrAaigFlueO2Concentration());
-        insertworkingDataEntity.setFloat(33, workingDataEntity.getUnit1ScrAaigFlueNoxConcentration());
-        insertworkingDataEntity.setFloat(34, workingDataEntity.getUnit1ScrAaigFlueGasTemperature());
-        insertworkingDataEntity.setFloat(35, workingDataEntity.getUnit1GasPressureDifference1());
-        insertworkingDataEntity.setFloat(36, workingDataEntity.getUnit1GasPressureDifference2());
-        insertworkingDataEntity.setFloat(37, workingDataEntity.getUnit1GasPressureDifference3());
-        insertworkingDataEntity.setFloat(38, workingDataEntity.getUnit2ScrOutletaO2Concentration());
-        insertworkingDataEntity.setFloat(39, workingDataEntity.getUnit2ScrOutletaNoxConcentration());
-        insertworkingDataEntity.setFloat(40, workingDataEntity.getUnit2ScrOutletaGasTemperature());
-        insertworkingDataEntity.setFloat(41, workingDataEntity.getUnit2ScrOutletaNh3Concentration());
-        insertworkingDataEntity.setFloat(42, workingDataEntity.getUnit2Nh3Flow());
-        insertworkingDataEntity.setFloat(43, workingDataEntity.getUnit2ScrAaigFlueFlow());
-        insertworkingDataEntity.setFloat(44, workingDataEntity.getUnit2ScrAaigFlueO2Concentration());
-        insertworkingDataEntity.setFloat(45, workingDataEntity.getUnit2ScrAaigFlueNoxConcentration());
-        insertworkingDataEntity.setFloat(46, workingDataEntity.getUnit2ScrAaigFlueGasTemperature());
-        insertworkingDataEntity.setFloat(47, workingDataEntity.getUnit2GasPressureDifference1());
-        insertworkingDataEntity.setFloat(48, workingDataEntity.getUnit2GasPressureDifference2());
-        insertworkingDataEntity.setFloat(49, workingDataEntity.getUnit2GasPressureDifference3());
-        LOGGER.debug(insertworkingDataEntity);
-        insertworkingDataEntity.executeUpdate();
-        insertworkingDataEntity.close();
-        connection.close();
-        LOGGER.debug("连接关闭");
+        MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);
+        System.out.println("连接数据库");
+        MongoCollection<Document> collection = mongoDatabase.getCollection(MongoDBConfiguration.COLLECTION_NAME);
+        System.out.println("选择集合");
+        Document document = new Document();
+        document.append("qiyeID", workingDataEntity.getQiyeID());
+        document.append("paikoubianhao", workingDataEntity.getPaikoubianhao());
+        document.append("nianyueri", workingDataEntity.getNianyueri());
+        document.append("jizubianhao_1", workingDataEntity.getJizubianhao_1());
+        document.append("shifenmiao_1", workingDataEntity.getShifenmiao_1());
+        document.append("guolubianhao_1_a", workingDataEntity.getGuolubianhao_1_a());
+        document.append("gongyileixingTX_1_a", workingDataEntity.getGongyileixingTX_1_a());
+        document.append("zhilisheshibianhao_1_a", workingDataEntity.getZhilisheshibianhao_1_a());
+        document.append("SCRfanyingqichukouyanqiO2nongdu_1_a", workingDataEntity.getSCRfanyingqichukouyanqiO2nongdu_1_a());
+        document.append("SCRfanyingqichukouyanqiNOXnongdu_1_a", workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_a());
+        document.append("SCRfanyingqichukouyanqiwendu_1_a", workingDataEntity.getSCRfanyingqichukouyanqiwendu_1_a());
+        document.append("SCRfanyingqichukouyanqiNH3nongdu_1_a", workingDataEntity.getSCRfanyingqichukouyanqiNH3nongdu_1_a());
+        document.append("jizuguolufuhe_1_a", workingDataEntity.getJizuguolufuhe_1_a());
+        document.append("SCRfanyingqiXAIGqianyandaoliuliang_1_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_a());
+        document.append("SCRfanyingqiXAIGqianyandaoO2nongdu_1_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_1_a());
+        document.append("SCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a());
+        document.append("SCRfanyingqiXjinkouyanqiwendu1_1_a", workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_a());
+        document.append("anqiliuliang_1_a", workingDataEntity.getAnqiliuliang_1_a());
+        document.append("fanyingqiXyanqiyacha1_1_a", workingDataEntity.getFanyingqiXyanqiyacha1_1_a());
+        document.append("fanyingqiXyanqiyacha2_1_a", workingDataEntity.getFanyingqiXyanqiyacha2_1_a());
+        document.append("fanyingqiXyanqiyacha3_1_a", workingDataEntity.getFanyingqiXyanqiyacha3_1_a());
+        document.append("guolubianhao_1_b", workingDataEntity.getGuolubianhao_1_b());
+        document.append("gongyileixingTX_1_b", workingDataEntity.getGongyileixingTX_1_b());
+        document.append("zhilisheshibianhao_1_b", workingDataEntity.getZhilisheshibianhao_1_b());
+        document.append("SCRfanyingqichukouyanqiO2nongdu_1_b", workingDataEntity.getSCRfanyingqichukouyanqiO2nongdu_1_b());
+        document.append("SCRfanyingqichukouyanqiNOXnongdu_1_b", workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_b());
+        document.append("SCRfanyingqichukouyanqiwendu_1_b", workingDataEntity.getSCRfanyingqichukouyanqiwendu_1_b());
+        document.append("SCRfanyingqichukouyanqiNH3nongdu_1_b", workingDataEntity.getSCRfanyingqichukouyanqiNH3nongdu_1_b());
+        document.append("jizuguolufuhe_1_b", workingDataEntity.getJizuguolufuhe_1_b());
+        document.append("SCRfanyingqiXAIGqianyandaoliuliang_1_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_b());
+        document.append("SCRfanyingqiXAIGqianyandaoO2nongdu_1_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_1_b());
+        document.append("SCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b());
+        document.append("SCRfanyingqiXjinkouyanqiwendu1_1_b", workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_b());
+        document.append("anqiliuliang_1_b", workingDataEntity.getAnqiliuliang_1_b());
+        document.append("fanyingqiXyanqiyacha1_1_b", workingDataEntity.getFanyingqiXyanqiyacha1_1_b());
+        document.append("fanyingqiXyanqiyacha2_1_b", workingDataEntity.getFanyingqiXyanqiyacha2_1_b());
+        document.append("fanyingqiXyanqiyacha3_1_b", workingDataEntity.getFanyingqiXyanqiyacha3_1_b());
+        document.append("guolubianhao_1", workingDataEntity.getGuolubianhao_1());
+        document.append("gongyileixingTS_1", workingDataEntity.getGongyileixingTS_1());
+        document.append("zhilisheshibianhao_1", workingDataEntity.getZhilisheshibianhao_1());
+        document.append("rukouyanqiliang_1", workingDataEntity.getRukouyanqiliang_1());
+        document.append("rukouliunongdu_1", workingDataEntity.getRukouliunongdu_1());
+        document.append("rukouO2nongdu_1", workingDataEntity.getRukouO2nongdu_1());
+        document.append("rukouyanwen_1", workingDataEntity.getRukouyanwen_1());
+        document.append("rukouyanqishidu_1", workingDataEntity.getRukouyanqishidu_1());
+        document.append("shihuishigongjiangliang_1", workingDataEntity.getShihuishigongjiangliang_1());
+        document.append("shigaoyemidu_1", workingDataEntity.getShigaoyemidu_1());
+        document.append("PHzhi_1", workingDataEntity.getPHzhi_1());
+        document.append("chukouyanqiliang_1", workingDataEntity.getChukouyanqiliang_1());
+        document.append("chukouliunongdu_1", workingDataEntity.getChukouliunongdu_1());
+        document.append("chukouO2nongdu_1", workingDataEntity.getChukouO2nongdu_1());
+        document.append("chukouyanwen_1", workingDataEntity.getChukouyanwen_1());
+        document.append("chukouyanqishidu_1", workingDataEntity.getChukouyanqishidu_1());
+        document.append("rukouyanqiyali_1", workingDataEntity.getRukouyanqiyali_1());
+        document.append("chukouyanqiyali_1", workingDataEntity.getChukouyanqiyali_1());
+        document.append("rukouyanqifenchendu_1", workingDataEntity.getRukouyanqifenchendu_1());
+        document.append("chukouyanqifenchendu_1", workingDataEntity.getChukouyanqifenchendu_1());
+        document.append("no1xunhuanbengkaiguanzhuangtai_1", workingDataEntity.getNo1xunhuanbengkaiguanzhuangtai_1());
+        document.append("no2xunhuanbengkaiguanzhuangtai_1", workingDataEntity.getNo2xunhuanbengkaiguanzhuangtai_1());
+        document.append("no3xunhuanbengkaiguanzhuangtai_1", workingDataEntity.getNo3xunhuanbengkaiguanzhuangtai_1());
+        document.append("no4xunhuanbengkaiguanzhuangtai_1", workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_1());
+        document.append("no1yanghuafengjikaiguanzhuangtai_1", workingDataEntity.getNo1yanghuafengjikaiguanzhuangtai_1());
+        document.append("no2yanghuafengjikaiguanzhuangtai_1", workingDataEntity.getNo2yanghuafengjikaiguanzhuangtai_1());
+        document.append("shihuishijiangyemidu_1", workingDataEntity.getShihuishijiangyemidu_1());
+        document.append("guolufuhe_1", workingDataEntity.getGuolufuhe_1());
+        document.append("no1xunhuanbengdianliu_1", workingDataEntity.getNo1xunhuanbengdianliu_1());
+        document.append("no2xunhuanbengdianliu_1", workingDataEntity.getNo2xunhuanbengdianliu_1());
+        document.append("no3xunhuanbengdianliu_1", workingDataEntity.getNo3xunhuanbengdianliu_1());
+        document.append("no4xunhuanbengdianliu_1", workingDataEntity.getNo4xunhuanbengdianliu_1());
+        document.append("no1yanghuafengjidianliu_1", workingDataEntity.getNo1yanghuafengjidianliu_1());
+        document.append("no2yanghuafengjidianliu_1", workingDataEntity.getNo2yanghuafengjidianliu_1());
+        document.append("jizubianhao_2", workingDataEntity.getJizubianhao_2());
+        document.append("shifenmiao_2", workingDataEntity.getShifenmiao_2());
+        document.append("guolubianhao_2_a", workingDataEntity.getGuolubianhao_2_a());
+        document.append("gongyileixingTX_2_a", workingDataEntity.getGongyileixingTX_2_a());
+        document.append("zhilisheshibianhao_2_a", workingDataEntity.getZhilisheshibianhao_2_a());
+        document.append("SCRfanyingqichukouyanqiO2nongdu_2_a", workingDataEntity.getSCRfanyingqichukouyanqiO2nongdu_2_a());
+        document.append("SCRfanyingqichukouyanqiNOXnongdu_2_a", workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_a());
+        document.append("SCRfanyingqichukouyanqiwendu_2_a", workingDataEntity.getSCRfanyingqichukouyanqiwendu_2_a());
+        document.append("SCRfanyingqichukouyanqiNH3nongdu_2_a", workingDataEntity.getSCRfanyingqichukouyanqiNH3nongdu_2_a());
+        document.append("jizuguolufuhe_2_a", workingDataEntity.getJizuguolufuhe_2_a());
+        document.append("SCRfanyingqiXAIGqianyandaoliuliang_2_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_a());
+        document.append("SCRfanyingqiXAIGqianyandaoO2nongdu_2_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_2_a());
+        document.append("SCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a", workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a());
+        document.append("SCRfanyingqiXjinkouyanqiwendu1_2_a", workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_a());
+        document.append("anqiliuliang_2_a", workingDataEntity.getAnqiliuliang_2_a());
+        document.append("fanyingqiXyanqiyacha1_2_a", workingDataEntity.getFanyingqiXyanqiyacha1_2_a());
+        document.append("fanyingqiXyanqiyacha2_2_a", workingDataEntity.getFanyingqiXyanqiyacha2_2_a());
+        document.append("fanyingqiXyanqiyacha3_2_a", workingDataEntity.getFanyingqiXyanqiyacha3_2_a());
+        document.append("guolubianhao_2_b", workingDataEntity.getGuolubianhao_2_b());
+        document.append("gongyileixingTX_2_b", workingDataEntity.getGongyileixingTX_2_b());
+        document.append("zhilisheshibianhao_2_b", workingDataEntity.getZhilisheshibianhao_2_b());
+        document.append("SCRfanyingqichukouyanqiO2nongdu_2_b", workingDataEntity.getSCRfanyingqichukouyanqiO2nongdu_2_b());
+        document.append("SCRfanyingqichukouyanqiNOXnongdu_2_b", workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_b());
+        document.append("SCRfanyingqichukouyanqiwendu_2_b", workingDataEntity.getSCRfanyingqichukouyanqiwendu_2_b());
+        document.append("SCRfanyingqichukouyanqiNH3nongdu_2_b", workingDataEntity.getSCRfanyingqichukouyanqiNH3nongdu_2_b());
+        document.append("jizuguolufuhe_2_b", workingDataEntity.getJizuguolufuhe_2_b());
+        document.append("SCRfanyingqiXAIGqianyandaoliuliang_2_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_b());
+        document.append("SCRfanyingqiXAIGqianyandaoO2nongdu_2_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_2_b());
+        document.append("SCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b", workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b());
+        document.append("SCRfanyingqiXjinkouyanqiwendu1_2_b", workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_b());
+        document.append("anqiliuliang_2_b", workingDataEntity.getAnqiliuliang_2_b());
+        document.append("fanyingqiXyanqiyacha1_2_b", workingDataEntity.getFanyingqiXyanqiyacha1_2_b());
+        document.append("fanyingqiXyanqiyacha2_2_b", workingDataEntity.getFanyingqiXyanqiyacha2_2_b());
+        document.append("fanyingqiXyanqiyacha3_2_b", workingDataEntity.getFanyingqiXyanqiyacha3_2_b());
+        document.append("guolubianhao_2", workingDataEntity.getGuolubianhao_2());
+        document.append("gongyileixingTS_2", workingDataEntity.getGongyileixingTS_2());
+        document.append("zhilisheshibianhao_2", workingDataEntity.getZhilisheshibianhao_2());
+        document.append("rukouyanqiliang_2", workingDataEntity.getRukouyanqiliang_2());
+        document.append("rukouliunongdu_2", workingDataEntity.getRukouliunongdu_2());
+        document.append("rukouO2nongdu_2", workingDataEntity.getRukouO2nongdu_2());
+        document.append("rukouyanwen_2", workingDataEntity.getRukouyanwen_2());
+        document.append("rukouyanqishidu_2", workingDataEntity.getRukouyanqishidu_2());
+        document.append("shihuishigongjiangliang_2", workingDataEntity.getShihuishigongjiangliang_2());
+        document.append("shigaoyemidu_2", workingDataEntity.getShigaoyemidu_2());
+        document.append("PHzhi_2", workingDataEntity.getPHzhi_2());
+        document.append("chukouyanqiliang_2", workingDataEntity.getChukouyanqiliang_2());
+        document.append("chukouliunongdu_2", workingDataEntity.getChukouliunongdu_2());
+        document.append("chukouO2nongdu_2", workingDataEntity.getChukouO2nongdu_2());
+        document.append("chukouyanwen_2", workingDataEntity.getChukouyanwen_2());
+        document.append("chukouyanqishidu_2", workingDataEntity.getChukouyanqishidu_2());
+        document.append("rukouyanqiyali_2", workingDataEntity.getRukouyanqiyali_2());
+        document.append("chukouyanqiyali_2", workingDataEntity.getChukouyanqiyali_2());
+        document.append("rukouyanqifenchendu_2", workingDataEntity.getRukouyanqifenchendu_2());
+        document.append("chukouyanqifenchendu_2", workingDataEntity.getChukouyanqifenchendu_2());
+        document.append("no1xunhuanbengkaiguanzhuangtai_2", workingDataEntity.getNo1xunhuanbengkaiguanzhuangtai_2());
+        document.append("no2xunhuanbengkaiguanzhuangtai_2", workingDataEntity.getNo2xunhuanbengkaiguanzhuangtai_2());
+        document.append("no3xunhuanbengkaiguanzhuangtai_2", workingDataEntity.getNo3xunhuanbengkaiguanzhuangtai_2());
+        document.append("no4xunhuanbengkaiguanzhuangtai_2", workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_2());
+        document.append("no1yanghuafengjikaiguanzhuangtai_2", workingDataEntity.getNo1yanghuafengjikaiguanzhuangtai_2());
+        document.append("no2yanghuafengjikaiguanzhuangtai_2", workingDataEntity.getNo2yanghuafengjikaiguanzhuangtai_2());
+        document.append("shihuishijiangyemidu_2", workingDataEntity.getShihuishijiangyemidu_2());
+        document.append("guolufuhe_2", workingDataEntity.getGuolufuhe_2());
+        document.append("no1xunhuanbengdianliu_2", workingDataEntity.getNo1xunhuanbengdianliu_2());
+        document.append("no2xunhuanbengdianliu_2", workingDataEntity.getNo2xunhuanbengdianliu_2());
+        document.append("no3xunhuanbengdianliu_2", workingDataEntity.getNo3xunhuanbengdianliu_2());
+        document.append("no4xunhuanbengdianliu_2", workingDataEntity.getNo4xunhuanbengdianliu_2());
+        document.append("no1yanghuafengjidianliu_2", workingDataEntity.getNo1yanghuafengjidianliu_2());
+        document.append("no2yanghuafengjidianliu_2", workingDataEntity.getNo2yanghuafengjidianliu_2());
+        document.append("insert_time", workingDataEntity.getInsert_time());
+        collection.insertOne(document);
+
+        mongoClient.close();
     }
 }

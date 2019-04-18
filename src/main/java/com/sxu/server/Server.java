@@ -1,12 +1,15 @@
-package com.sxu.server;
+package com.huanxin.server;
 
-import com.sxu.constant.Constants;
+import com.huanxin.constant.Constants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 public class Server {
     private static final Logger LOGGER = Logger.getLogger(Server.class);
@@ -34,7 +37,8 @@ public class Server {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new IdleStateHandler(0, 0, Constants.TIMEGRANULARITY));
+                            pipeline.addLast(new ReadTimeoutHandler(60, TimeUnit.SECONDS));
+                            pipeline.addLast(new IdleStateHandler(0, Constants.TIMEGRANULARITY, 0));
                             pipeline.addLast(new ServerHandler());
                         }
                     });
