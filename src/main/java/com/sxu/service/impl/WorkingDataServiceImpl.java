@@ -17,7 +17,7 @@ public class WorkingDataServiceImpl implements WorkingDataService {
         MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);
         System.out.println("连接数据库");
-        MongoCollection<Document> collection = mongoDatabase.getCollection(MongoDBConfiguration.COLLECTION_NAME);
+        MongoCollection<Document> collection = mongoDatabase.getCollection(MongoDBConfiguration.COLLECTION_NAME_COMPANY);
         System.out.println("选择集合");
         Document document = new Document();
         document.append("qiyeID", workingDataEntity.getQiyeID());

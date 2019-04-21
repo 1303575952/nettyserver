@@ -146,7 +146,7 @@ public class HttpClientUtil {
         param.put("NH3InVol", "5");
 
         // 工况模型接口的调用
-        String result = httpGetWithJSON("http://localhost:8081/renren-api/jnrdgk/tuoxiao_reaction", param);
+        String result = httpGetWithJSON("http://39.96.33.44:8081/renren-api/jnrdgk/tuoxiao_reaction", param);
 
         System.out.println("result:" + result);
 

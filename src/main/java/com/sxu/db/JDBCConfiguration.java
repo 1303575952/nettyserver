@@ -1,4 +1,4 @@
-package com.sxu.db;
+package com.huanxin.db;
 
 import org.apache.log4j.Logger;
 
@@ -7,11 +7,11 @@ import java.sql.DriverManager;
 
 public class JDBCConfiguration {
     private static final Logger LOGGER = Logger.getLogger(JDBCConfiguration.class);
-    public static String HOST = "39.96.33.44";
+    public static String HOST = "rm-bp11r52xk5623pn66o.mysql.rds.aliyuncs.com";
     public static String PORT = "3306";
-    public static String DATABASE_NAME = "received_usr_info";
-    public static String USER_NAME = "root";
-    public static String PASSWORD = "root";
+    public static String DATABASE_NAME = "huanxin";
+    public static String USER_NAME = "huanxin";
+    public static String PASSWORD = "Sxctkjhuanxin!";
 
     /**
      * 获取数据库连接
@@ -26,5 +26,9 @@ public class JDBCConfiguration {
         connection = DriverManager.getConnection(url);
         LOGGER.debug("成功获取连接");
         return connection;
+    }
+
+    public static void main(String[] args) throws Exception {
+        getConn();
     }
 }

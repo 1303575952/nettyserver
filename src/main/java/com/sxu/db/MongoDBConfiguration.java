@@ -14,7 +14,8 @@ public class MongoDBConfiguration {
     public static String PASSWORD = "Ws4815115!";
     public static String AUTHENTICATION_DATABASE = "admin";
     public static String DATABASE_NAME = "huanxin";
-    public static String COLLECTION_NAME = "source_company_jin_neng_re_dian";
+    public static String COLLECTION_NAME_COMPANY = "source_company_jin_neng_re_dian";
+    public static String COLLECTION_NAME_TX_TS = "company_industry_monitor_common_minute";
     public static ServerAddress serverAddress = new ServerAddress(HOST, PORT);
 
     public static MongoClient createMongoDBClient() {
@@ -29,7 +30,7 @@ public class MongoDBConfiguration {
     public static void main(String[] args) {
         MongoClient mongoClient = createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(DATABASE_NAME);
-        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME);
+        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection(COLLECTION_NAME_COMPANY);
         Document document = new Document();
         document.append("title", "this is mongodb");
         document.append("description", "database");

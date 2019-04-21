@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class TimeUtil {
     private static final Logger LOGGER = Logger.getLogger(TimeUtil.class);
+
     /**
      * 获取执行此条信息的时间
      * 数据格式为20190320123456
@@ -36,14 +37,31 @@ public class TimeUtil {
         return sb.toString();
     }
 
-    public static String getCurrentDateTimeSplitByHyphenAndColon(){
+    /**
+     * 获取执行此条信息的时间
+     * yyyy-MM-dd HH:mm:ss
+     *
+     * @return
+     */
+    public static String getCurrentDateTimeSplitByHyphenAndColon() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateTime = sdf.format(date);
         return dateTime;
     }
 
+    /**
+     * 年月日格式化
+     * 20190419转化为2019-04-19
+     *
+     * @param nianyueri
+     * @return
+     */
+    public static String nianyueriFormat(String nianyueri) {
+        return nianyueri.substring(0, 4) + "-" + nianyueri.substring(4, 6) + "-" + nianyueri.substring(6);
+    }
+
     public static void main(String[] args) {
-        System.out.println(TimeUtil.getCurrentDateTimeSplitByHyphenAndColon());
+        System.out.println(TimeUtil.nianyueriFormat("20190419"));
     }
 }

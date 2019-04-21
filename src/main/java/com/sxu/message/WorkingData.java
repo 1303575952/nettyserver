@@ -8,7 +8,7 @@ import java.util.zip.CRC32;
 
 public class WorkingData {
     private static final Logger LOGGER = Logger.getLogger(WorkingData.class);
-    public static void workingDataProcess(Object msg){
+    public static void workingDataProcess(Object msg) throws Exception {
         byte[] workingDataByteArr = DataConversion.Object2ByteArr(msg);
         String[] workingDataHexStringArr = DataConversion.byteArr2HexStringArr(workingDataByteArr);
         if (WorkingData.workingDataJudgeCRC32(workingDataByteArr)) {
@@ -19,7 +19,7 @@ public class WorkingData {
             LOGGER.debug("crc32校验有误");
         }
     }
-    public static void workingDataProcess(byte[] workingDataByteArr){
+    public static void workingDataProcess(byte[] workingDataByteArr) throws Exception {
         String[] workingDataHexStringArr = DataConversion.byteArr2HexStringArr(workingDataByteArr);
         if (WorkingData.workingDataJudgeCRC32(workingDataByteArr)) {
             //拿到工况数据并入库
