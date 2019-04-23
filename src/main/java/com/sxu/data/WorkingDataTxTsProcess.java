@@ -89,8 +89,15 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_1_aSet.close();
             queryFacilityNumber_1_a.close();
             workingDataTxTsEntity_1_a.setFacilityNumber(facilityNumber_1_a);
-            workingDataTxTsEntity_1_a.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_1_a.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_1_a.setOperationConcentration(WorkingDataModel.nOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_1(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_1_a(),
+                    workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_a(),
+                    workingDataEntity.getAnqiliuliang_1_a()
+            ));
+            workingDataTxTsEntity_1_a.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_a(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a()));
             workingDataTxTsEntity_1_a.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1_a);
 
@@ -116,8 +123,15 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_1_bSet.close();
             queryFacilityNumber_1_b.close();
             workingDataTxTsEntity_1_b.setFacilityNumber(facilityNumber_1_b);
-            workingDataTxTsEntity_1_b.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_1_b.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_1_b.setOperationConcentration(WorkingDataModel.nOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_1(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_1_b(),
+                    workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_b(),
+                    workingDataEntity.getAnqiliuliang_1_b()
+            ));
+            workingDataTxTsEntity_1_b.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_b(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b()));
             workingDataTxTsEntity_1_b.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1_b);
 
@@ -143,8 +157,24 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_1Set.close();
             queryFacilityNumber_1.close();
             workingDataTxTsEntity_1.setFacilityNumber(facilityNumber_1);
-            workingDataTxTsEntity_1.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_1.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_1.setOperationConcentration(WorkingDataModel.sOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_1(),
+                    workingDataEntity.getRukouliunongdu_1(),
+                    workingDataEntity.getRukouO2nongdu_1(),
+                    workingDataEntity.getRukouyanwen_1(),
+                    workingDataEntity.getShihuishigongjiangliang_1(),
+                    0.95f,
+                    workingDataEntity.getShihuishijiangyemidu_1(),
+                    String.valueOf(workingDataEntity.getNo1xunhuanbengkaiguanzhuangtai_1() +
+                            workingDataEntity.getNo2xunhuanbengkaiguanzhuangtai_1() +
+                            workingDataEntity.getNo3xunhuanbengkaiguanzhuangtai_1() +
+                            workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_1()
+                    )
+            ));
+            workingDataTxTsEntity_1.setOperatingEfficiency(WorkingDataModel.sEfficiency(workingDataEntity.getChukouliunongdu_1(),
+                    workingDataEntity.getChukouyanqiliang_1(),
+                    workingDataEntity.getRukouliunongdu_1(),
+                    workingDataEntity.getRukouyanqiliang_1()));
             workingDataTxTsEntity_1.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1);
 
@@ -170,8 +200,15 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_2_aSet.close();
             queryFacilityNumber_2_a.close();
             workingDataTxTsEntity_2_a.setFacilityNumber(facilityNumber_2_a);
-            workingDataTxTsEntity_2_a.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_2_a.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_2_a.setOperationConcentration(WorkingDataModel.nOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_2(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_2_a(),
+                    workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_a(),
+                    workingDataEntity.getAnqiliuliang_2_a()
+            ));
+            workingDataTxTsEntity_2_a.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_a(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a()));
             workingDataTxTsEntity_2_a.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2_a);
 
@@ -197,8 +234,16 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_2_bSet.close();
             queryFacilityNumber_2_b.close();
             workingDataTxTsEntity_2_b.setFacilityNumber(facilityNumber_2_b);
-            workingDataTxTsEntity_2_b.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_2_b.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_2_b.setOperationConcentration(WorkingDataModel.nOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_2(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoO2nongdu_2_b(),
+                    workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_b(),
+                    workingDataEntity.getAnqiliuliang_2_b()
+            ));
+            workingDataTxTsEntity_2_b.setOperatingEfficiency(WorkingDataModel.nEfficiency(
+                    workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_b(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b()));
             workingDataTxTsEntity_2_b.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2_b);
 
@@ -224,8 +269,24 @@ public class WorkingDataTxTsProcess {
             queryFacilityNumber_2Set.close();
             queryFacilityNumber_2.close();
             workingDataTxTsEntity_2.setFacilityNumber(facilityNumber_2);
-            workingDataTxTsEntity_2.setOperationConcentration(0.0f);
-            workingDataTxTsEntity_2.setOperatingEfficiency(0.0f);
+            workingDataTxTsEntity_2.setOperationConcentration(WorkingDataModel.sOperationConcentration(
+                    workingDataEntity.getRukouyanqiliang_2(),
+                    workingDataEntity.getRukouliunongdu_2(),
+                    workingDataEntity.getRukouO2nongdu_2(),
+                    workingDataEntity.getRukouyanwen_2(),
+                    workingDataEntity.getShihuishigongjiangliang_2(),
+                    0.95f,
+                    workingDataEntity.getShihuishijiangyemidu_2(),
+                    String.valueOf(workingDataEntity.getNo1xunhuanbengkaiguanzhuangtai_2() +
+                            workingDataEntity.getNo2xunhuanbengkaiguanzhuangtai_2() +
+                            workingDataEntity.getNo3xunhuanbengkaiguanzhuangtai_2() +
+                            workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_2()
+                    )
+            ));
+            workingDataTxTsEntity_2.setOperatingEfficiency(WorkingDataModel.sEfficiency(workingDataEntity.getChukouliunongdu_2(),
+                    workingDataEntity.getChukouyanqiliang_2(),
+                    workingDataEntity.getRukouliunongdu_2(),
+                    workingDataEntity.getRukouyanqiliang_2()));
             workingDataTxTsEntity_2.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2);
 

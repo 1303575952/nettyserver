@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.huanxin.utils.HttpClientUtil;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class WorkingDataModel {
 
         // 构造工况模型的参数
         param.put("gasInVol", (long) gasInVol);
-        param.put("NO2InDen", String.valueOf(no2InDen));
+        param.put("NOxInDen", String.valueOf(no2InDen));
         param.put("O2InPer", String.valueOf(o2InPer));
         param.put("gasInTemp", String.valueOf(gasInTemp));
         param.put("NH3InVol", String.valueOf(nH3InVol));
@@ -36,10 +37,12 @@ public class WorkingDataModel {
         // 对返回的 Json 进行解析
         Map<String, Object> parsemap = JSON.parseObject(result, new TypeReference<Map<String, Object>>() {
         });
-
-        return (float) parsemap.get("NOxOutDen");
+        String s = parsemap.get("NOxOutDen").toString();
+        return Float.valueOf(s);
     }
-
+    public static void main(String[] args) {
+        System.out.println(nOperationConcentration(1,1,1,1,1));
+    }
     /**
      * 脱硫，运行浓度
      *
@@ -75,7 +78,8 @@ public class WorkingDataModel {
         Map<String, Object> parsemap = JSON.parseObject(result, new TypeReference<Map<String, Object>>() {
         });
 
-        return (float) parsemap.get("SO2OutDen");
+        String s = parsemap.get("SO2OutDen").toString();
+        return Float.valueOf(s);
     }
 
     /**
@@ -138,5 +142,43 @@ public class WorkingDataModel {
         });
 
         return (float) parsemap.get("ratio");
+    }
+
+    /**
+     * 脱硝直接计算
+     *
+     * @param nChukouNoxnongdu
+     * @param nRukouNoxnongdu
+     * @return
+     */
+    public static float nEfficiency(float nChukouNoxnongdu, float nRukouNoxnongdu) {
+        float neff = 1 - nChukouNoxnongdu / nRukouNoxnongdu;
+        if (neff < 0) {
+            return 0.0f;
+        } else if (neff > 1) {
+            return 1.0f;
+        } else {
+            return neff;
+        }
+    }
+
+    /**
+     * 脱硝直接计算
+     *
+     * @param sChukounongdu
+     * @param sChukouyanqiliang
+     * @param sRukounongdu
+     * @param sRukouyanqiliang
+     * @return
+     */
+    public static float sEfficiency(float sChukounongdu, float sChukouyanqiliang, float sRukounongdu, float sRukouyanqiliang) {
+        float seff = 1 - (sChukounongdu * sChukouyanqiliang) / (sRukounongdu * sRukouyanqiliang);
+        if (seff < 0) {
+            return 0.0f;
+        } else if (seff > 1) {
+            return 1.0f;
+        } else {
+            return seff;
+        }
     }
 }
