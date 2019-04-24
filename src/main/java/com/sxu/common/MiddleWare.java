@@ -29,10 +29,14 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String msgStr = DataConversion.Object2HexString(msg);
-        LOGGER.debug("接收到数据：" + msgStr);
+        LOGGER.debug("接收到数据（任意数据均打印）：" + msgStr);
+
         LOGGER.debug("msgStr.startsWith(Type.WORKING_DATA_HEAD)--" + msgStr.startsWith(Type.WORKING_DATA_HEAD));
         LOGGER.debug("msgStr.length() < Constants.WORKING_DATA_LENGTH--" + (msgStr.length() < Constants.WORKING_DATA_LENGTH));
         LOGGER.debug("Constants.isAssemble--" + Constants.isAssemble);
+        /**
+         * 符合条件则执行拼包
+         */
         if ((msgStr.startsWith(Type.WORKING_DATA_HEAD) && (msgStr.length() < Constants.WORKING_DATA_LENGTH)) || Constants.isAssemble) {
             Constants.isAssemble = true;
             Constants.packingStr = Constants.packingStr.append(msgStr);
@@ -50,6 +54,10 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
                 Constants.isAssemble = false;
             }
         }
+
+        /**
+         * 正常指令，未出现拆包
+         */
         if (msgStr.startsWith(Type.WORKING_DATA_HEAD)) {
             //接收到的消息为工况数据指令
             WorkingData.workingDataProcess(msg);
@@ -74,13 +82,12 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     protected abstract void handlerData(ChannelHandlerContext ctx, Object msg);
 
     /**
-     * 发送授时指令
+     * 服务端发送授时指令
      *
      * @param ctx
      */
     protected void sendTimeSynInstruction(ChannelHandlerContext ctx) {
         byte[] timeSynInstructionByteArr = DataConversion.charArr2ByteArr(Instruction.getTimeSynInstruction());
-        //System.out.println("time syn instruction length:" + timeSynInstructionByteArr.length);
         ByteBuf timeSynInstructionBuf = Unpooled.buffer();
         timeSynInstructionBuf.writeBytes(timeSynInstructionByteArr);
         ctx.writeAndFlush(timeSynInstructionBuf);

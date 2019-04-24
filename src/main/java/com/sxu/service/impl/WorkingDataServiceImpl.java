@@ -13,6 +13,12 @@ public class WorkingDataServiceImpl implements WorkingDataService {
 
     private static final Logger LOGGER = Logger.getLogger(WorkingDataServiceImpl.class);
 
+    /**
+     * 工况数据入mongodb
+     *
+     * @param workingDataEntity
+     * @throws Exception
+     */
     public void insertWorkingData(WorkingDataEntity workingDataEntity) throws Exception {
         MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);

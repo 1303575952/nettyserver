@@ -21,12 +21,16 @@ public class DataProcess {
      * @param arrayHex
      */
     public static void getAndInsertWorkingData2DB(String[] arrayHex) throws Exception {
+        //原始工况实体
         WorkingDataEntity workingDataEntity = WorkingDataProcess.getWorkingDataEntityFromFrame(arrayHex);
+        //原始工况实体对应的6条脱硫脱硝实体
         List<WorkingDataTxTsEntity> workingDataTxTsEntities = WorkingDataTxTsProcess.getWorkingDataTxTsEntityFromWorkingData(workingDataEntity);
 
+        //处理原始工况实体入库
         WorkingDataService workingDataService = new WorkingDataServiceImpl();
         workingDataService.insertWorkingData(workingDataEntity);
 
+        //处理原始工况实体对应的6条脱硫脱硝实体入库
         WorkingDataTxTsService workingDataTxTsService = new WorkingDataServiceTxTsImpl();
         workingDataTxTsService.insertWorkingDataTxTs(workingDataTxTsEntities);
     }

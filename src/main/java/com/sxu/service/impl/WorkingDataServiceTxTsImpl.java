@@ -16,6 +16,12 @@ public class WorkingDataServiceTxTsImpl implements WorkingDataTxTsService {
 
     private static final Logger LOGGER = Logger.getLogger(WorkingDataServiceTxTsImpl.class);
 
+    /**
+     * 脱硫脱硝入mongodb
+     *
+     * @param workingDataTxTsEntities
+     * @throws Exception
+     */
     public void insertWorkingDataTxTs(List<WorkingDataTxTsEntity> workingDataTxTsEntities) throws Exception {
         MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);

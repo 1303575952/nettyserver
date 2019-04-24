@@ -17,7 +17,7 @@ public class Instruction {
     public static final char[] TIME_SYN_FAILED_INSTRUCTION = {0x22, 0x20, 0x44, 0x21, 0x20, 0x1d, 0x73, 0x34, 0x70, 0x20, 0x0a};
 
     /**
-     * 向硬件端发送的授时指令
+     * 向硬件端发送的授时指令，授时时间需要构造
      *
      * @return
      */

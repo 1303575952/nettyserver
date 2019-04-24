@@ -5,6 +5,9 @@ import com.huanxin.utils.DataConversion;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
+/**
+ * 处理授时失败
+ */
 public class TimeSynFailed {
     private static final Logger LOGGER = Logger.getLogger(TimeSynFailed.class);
 

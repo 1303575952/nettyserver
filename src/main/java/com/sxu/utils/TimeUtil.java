@@ -5,6 +5,9 @@ import org.apache.log4j.Logger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 时间处理相关
+ */
 public class TimeUtil {
     private static final Logger LOGGER = Logger.getLogger(TimeUtil.class);
 

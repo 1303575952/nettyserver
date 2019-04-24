@@ -17,6 +17,11 @@ public class WorkingDataTxTsProcess {
 
     /**
      * 通过帧拿到工况数据，封装到workingDataEntity中
+     * <p>
+     * 查 basic_company 得到 区域编号region_id 行业编号industry_id 公司编号id 公司名称name
+     * 查 basic_industry 得到 行业名称name
+     * 查 basic_drain 得到 排口名称name
+     * 查 basic_facility 得到 设施编号facility_number
      *
      * @param workingDataEntity
      * @return

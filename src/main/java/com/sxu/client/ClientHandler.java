@@ -276,6 +276,6 @@ public class ClientHandler extends MiddleWare {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.error(name + "exception :" + cause.toString());
+        LOGGER.error("客户端出现异常:" + cause.toString());
     }
 }

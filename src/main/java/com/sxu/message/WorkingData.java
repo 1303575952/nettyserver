@@ -8,6 +8,13 @@ import java.util.zip.CRC32;
 
 public class WorkingData {
     private static final Logger LOGGER = Logger.getLogger(WorkingData.class);
+
+    /**
+     * 工况数据校验并入库
+     *
+     * @param msg
+     * @throws Exception
+     */
     public static void workingDataProcess(Object msg) throws Exception {
         byte[] workingDataByteArr = DataConversion.Object2ByteArr(msg);
         String[] workingDataHexStringArr = DataConversion.byteArr2HexStringArr(workingDataByteArr);
@@ -19,6 +26,13 @@ public class WorkingData {
             LOGGER.debug("crc32校验有误");
         }
     }
+
+    /**
+     * 工况数据校验并入库
+     *
+     * @param workingDataByteArr
+     * @throws Exception
+     */
     public static void workingDataProcess(byte[] workingDataByteArr) throws Exception {
         String[] workingDataHexStringArr = DataConversion.byteArr2HexStringArr(workingDataByteArr);
         if (WorkingData.workingDataJudgeCRC32(workingDataByteArr)) {
@@ -30,6 +44,12 @@ public class WorkingData {
         }
     }
 
+    /**
+     * 工况数据CRC32校验
+     *
+     * @param byteArr
+     * @return
+     */
     public static boolean workingDataJudgeCRC32(byte[] byteArr) {
         String[] hexStringArr = DataConversion.byteArr2HexStringArr(byteArr);
         CRC32 crc32 = new CRC32();

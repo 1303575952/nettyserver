@@ -5,6 +5,9 @@ import com.huanxin.utils.DataConversion;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 
+/**
+ * 授时成功
+ */
 public class TimeSynSuccess {
     private static final Logger LOGGER = Logger.getLogger(TimeSynSuccess.class);
 

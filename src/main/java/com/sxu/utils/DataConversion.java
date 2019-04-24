@@ -3,6 +3,9 @@ package com.huanxin.utils;
 import io.netty.buffer.ByteBuf;
 import org.apache.log4j.Logger;
 
+/**
+ * 各种数据转换
+ */
 public class DataConversion {
     private static final Logger LOGGER = Logger.getLogger(DataConversion.class);
 

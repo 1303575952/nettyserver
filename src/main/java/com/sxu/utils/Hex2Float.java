@@ -2,6 +2,9 @@ package com.huanxin.utils;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 浮点和16进制的相互转化
+ */
 public class Hex2Float {
     private static final Logger LOGGER = Logger.getLogger(Hex2Float.class);
 
