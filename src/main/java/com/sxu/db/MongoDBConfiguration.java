@@ -8,14 +8,18 @@ import org.bson.Document;
 
 public class MongoDBConfiguration {
     private static final Logger LOGGER = Logger.getLogger(MongoDBConfiguration.class);
-    public static final String HOST = "dds-bp1babc036f87d64-pub.mongodb.rds.aliyuncs.com";
+    public static final String HOST = "dds-****************-pub.mongodb.rds.aliyuncs.com";
     public static final int PORT = 3717;
     public static String USERNAME = "root";
-    public static String PASSWORD = "Ws4815115!";
+    public static String PASSWORD = "**********";
     public static String AUTHENTICATION_DATABASE = "admin";
-    public static String DATABASE_NAME = "huanxin";
+    public static String DATABASE_NAME = "*******";
+
     public static String COLLECTION_NAME_COMPANY = "source_company_jin_neng_re_dian";
     public static String COLLECTION_NAME_TX_TS = "company_industry_monitor_common_minute";
+    public static String COLLECTION_NAME_TX_MINUTE = "company_industry_monitor_nitre_minute";
+    public static String COLLECTION_NAME_TS_MINUTE = "company_industry_monitor_sulfur_minute";
+
     public static ServerAddress serverAddress = new ServerAddress(HOST, PORT);
 
     public static MongoClient createMongoDBClient() {

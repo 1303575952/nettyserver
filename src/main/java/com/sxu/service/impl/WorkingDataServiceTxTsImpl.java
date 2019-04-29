@@ -25,9 +25,9 @@ public class WorkingDataServiceTxTsImpl implements WorkingDataTxTsService {
     public void insertWorkingDataTxTs(List<WorkingDataTxTsEntity> workingDataTxTsEntities) throws Exception {
         MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);
-        System.out.println("连接数据库");
+        LOGGER.debug("连接数据库" + MongoDBConfiguration.DATABASE_NAME);
         MongoCollection<Document> collection = mongoDatabase.getCollection(MongoDBConfiguration.COLLECTION_NAME_TX_TS);
-        System.out.println("选择集合");
+        LOGGER.debug("选择集合" + MongoDBConfiguration.COLLECTION_NAME_TX_TS);
         List<Document> documents = new ArrayList<Document>();
         for (int i = 0; i < workingDataTxTsEntities.size(); i++) {
             Document document = new Document();
@@ -50,5 +50,6 @@ public class WorkingDataServiceTxTsImpl implements WorkingDataTxTsService {
         collection.insertMany(documents);
 
         mongoClient.close();
+        LOGGER.debug("关闭连接");
     }
 }

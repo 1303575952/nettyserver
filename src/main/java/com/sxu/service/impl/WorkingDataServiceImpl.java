@@ -22,9 +22,9 @@ public class WorkingDataServiceImpl implements WorkingDataService {
     public void insertWorkingData(WorkingDataEntity workingDataEntity) throws Exception {
         MongoClient mongoClient = MongoDBConfiguration.createMongoDBClient();
         MongoDatabase mongoDatabase = mongoClient.getDatabase(MongoDBConfiguration.DATABASE_NAME);
-        System.out.println("连接数据库");
+        LOGGER.debug("连接数据库" + MongoDBConfiguration.DATABASE_NAME);
         MongoCollection<Document> collection = mongoDatabase.getCollection(MongoDBConfiguration.COLLECTION_NAME_COMPANY);
-        System.out.println("选择集合");
+        LOGGER.debug("选择集合" + MongoDBConfiguration.COLLECTION_NAME_COMPANY);
         Document document = new Document();
         document.append("qiyeID", workingDataEntity.getQiyeID());
         document.append("paikoubianhao", workingDataEntity.getPaikoubianhao());
@@ -169,5 +169,6 @@ public class WorkingDataServiceImpl implements WorkingDataService {
         collection.insertOne(document);
 
         mongoClient.close();
+        LOGGER.debug("关闭连接");
     }
 }

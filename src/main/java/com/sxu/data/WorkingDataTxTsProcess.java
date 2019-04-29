@@ -59,7 +59,7 @@ public class WorkingDataTxTsProcess {
             queryIndustry.close();
             Integer drainId = 1;
             String drainName = "";
-            PreparedStatement queryDrain = connection.prepareStatement("select * from basic_drain where id = ?");
+            PreparedStatement queryDrain = connection.prepareStatement("select * from basic_drain where data_from_paikoubianhao = ?");
             queryDrain.setInt(1, drainId);
             ResultSet queryDrainSet = queryDrain.executeQuery();
             while (queryDrainSet.next()) {
@@ -296,7 +296,7 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntities.add(workingDataTxTsEntity_2);
 
             connection.close();
-
+            LOGGER.debug("关闭MySQL连接");
         } catch (Exception e) {
             e.printStackTrace();
         }

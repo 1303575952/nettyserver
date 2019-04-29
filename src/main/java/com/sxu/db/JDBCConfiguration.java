@@ -7,11 +7,11 @@ import java.sql.DriverManager;
 
 public class JDBCConfiguration {
     private static final Logger LOGGER = Logger.getLogger(JDBCConfiguration.class);
-    public static String HOST = "rm-bp11r52xk5623pn66o.mysql.rds.aliyuncs.com";
+    public static String HOST = "rm-****************.mysql.rds.aliyuncs.com";
     public static String PORT = "3306";
-    public static String DATABASE_NAME = "huanxin";
-    public static String USER_NAME = "huanxin";
-    public static String PASSWORD = "Sxctkjhuanxin!";
+    public static String DATABASE_NAME = "*******";
+    public static String USER_NAME = "*******";
+    public static String PASSWORD = "**************";
 
     /**
      * 获取数据库连接
@@ -24,7 +24,7 @@ public class JDBCConfiguration {
         Class.forName("com.mysql.jdbc.Driver");
         String url = "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE_NAME + "?user=" + USER_NAME + "&password=" + PASSWORD + "&useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8";
         connection = DriverManager.getConnection(url);
-        LOGGER.debug("成功获取连接");
+        LOGGER.debug("成功获取MySQL连接");
         return connection;
     }
 
