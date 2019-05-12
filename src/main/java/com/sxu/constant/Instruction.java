@@ -1,6 +1,6 @@
-package com.huanxin.constant;
+package com.sxu.constant;
 
-import com.huanxin.utils.TimeUtil;
+import com.sxu.utils.TimeUtil;
 import org.apache.log4j.Logger;
 
 import java.util.zip.CRC32;

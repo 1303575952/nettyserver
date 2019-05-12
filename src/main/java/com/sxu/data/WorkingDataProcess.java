@@ -1,15 +1,15 @@
-package com.huanxin.data;
+package com.sxu.data;
 
-import com.huanxin.entity.WorkingDataEntity;
-import com.huanxin.utils.Hex2Float;
-import com.huanxin.utils.TimeUtil;
+import com.sxu.entity.WorkingDataEntity;
+import com.sxu.utils.Hex2Float;
+import com.sxu.utils.TimeUtil;
 import org.apache.log4j.Logger;
 
 public class WorkingDataProcess {
     private static final Logger LOGGER = Logger.getLogger(WorkingDataProcess.class);
 
     /**
-     * 通过帧拿到工况数据，封装到workingDataEntity中
+     * 通过帧拿到工况数据，封装到对象workingDataEntity中
      *
      * @param arrayHex
      * @return

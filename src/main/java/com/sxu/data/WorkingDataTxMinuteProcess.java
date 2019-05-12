@@ -1,16 +1,26 @@
-package com.huanxin.data;
+package com.sxu.data;
 
-import com.huanxin.entity.WorkingDataEntity;
-import com.huanxin.entity.WorkingDataTxMinuteEntity;
-import com.huanxin.entity.WorkingDataTxTsEntity;
+import com.sxu.entity.WorkingDataEntity;
+import com.sxu.entity.WorkingDataTxMinuteEntity;
+import com.sxu.entity.WorkingDataTxTsEntity;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 脱硝分钟数据
+ */
 public class WorkingDataTxMinuteProcess {
     private static final Logger LOGGER = Logger.getLogger(WorkingDataTxMinuteProcess.class);
 
+    /**
+     * 从工况原始数据和工况脱硫脱硝公共数据得到工况脱硝数据
+     *
+     * @param workingDataEntity       工况原始数据
+     * @param workingDataTxTsEntities 工况脱硫脱硝公共数据
+     * @return
+     */
     public static List<WorkingDataTxMinuteEntity> getWorkingDataTxMinuteEntity(WorkingDataEntity workingDataEntity, List<WorkingDataTxTsEntity> workingDataTxTsEntities) {
         List<WorkingDataTxMinuteEntity> workingDataTxMinuteEntities = new ArrayList<>();
         for (WorkingDataTxTsEntity workingDataTxTsEntity : workingDataTxTsEntities) {
@@ -23,7 +33,7 @@ public class WorkingDataTxMinuteProcess {
                 Integer drainId = workingDataTxTsEntity.getDrainId();
                 String drainName = workingDataTxTsEntity.getDrainName();
                 Integer facilityId = workingDataTxTsEntity.getFacilityId();
-                String facilityName = workingDataTxTsEntity.getFacilityNumber();
+                String facilityName = workingDataTxTsEntity.getFacilityName();
                 Float operationConcentration = workingDataTxTsEntity.getOperationConcentration();
                 Float operatingEfficiency = workingDataTxTsEntity.getOperatingEfficiency();
 
@@ -83,6 +93,7 @@ public class WorkingDataTxMinuteProcess {
 
                 workingDataTxMinuteEntities.add(workingDataTxMinuteEntity);
             } else {
+                //非脱硝，跳过
                 continue;
             }
         }

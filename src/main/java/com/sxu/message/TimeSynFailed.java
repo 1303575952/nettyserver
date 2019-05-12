@@ -1,7 +1,7 @@
-package com.huanxin.message;
+package com.sxu.message;
 
-import com.huanxin.constant.Instruction;
-import com.huanxin.utils.DataConversion;
+import com.sxu.constant.Instruction;
+import com.sxu.utils.DataConversion;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
 

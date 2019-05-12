@@ -1,7 +1,7 @@
-package com.huanxin.message;
+package com.sxu.message;
 
-import com.huanxin.db.DataProcess;
-import com.huanxin.utils.DataConversion;
+import com.sxu.db.DataProcess;
+import com.sxu.utils.DataConversion;
 import org.apache.log4j.Logger;
 
 import java.util.zip.CRC32;

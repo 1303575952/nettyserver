@@ -1,6 +1,6 @@
-package com.huanxin.service;
+package com.sxu.service;
 
-import com.huanxin.entity.WorkingDataEntity;
+import com.sxu.entity.WorkingDataEntity;
 
 public interface WorkingDataService {
     void insertWorkingData(WorkingDataEntity workingDataEntity) throws Exception;

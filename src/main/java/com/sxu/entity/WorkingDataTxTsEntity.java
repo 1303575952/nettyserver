@@ -1,4 +1,4 @@
-package com.huanxin.entity;
+package com.sxu.entity;
 
 import lombok.*;
 
@@ -19,6 +19,7 @@ public class WorkingDataTxTsEntity {
     String drainName;
     Integer facilityId;
     String facilityNumber;
+    String facilityName;
     Float operationConcentration;
     Float operatingEfficiency;
     String createTime;

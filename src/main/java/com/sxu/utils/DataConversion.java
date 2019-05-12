@@ -1,4 +1,4 @@
-package com.huanxin.utils;
+package com.sxu.utils;
 
 import io.netty.buffer.ByteBuf;
 import org.apache.log4j.Logger;

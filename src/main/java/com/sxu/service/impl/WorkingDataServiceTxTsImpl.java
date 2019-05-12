@@ -1,8 +1,8 @@
-package com.huanxin.service.impl;
+package com.sxu.service.impl;
 
-import com.huanxin.db.MongoDBConfiguration;
-import com.huanxin.entity.WorkingDataTxTsEntity;
-import com.huanxin.service.WorkingDataTxTsService;
+import com.sxu.db.MongoDBConfiguration;
+import com.sxu.entity.WorkingDataTxTsEntity;
+import com.sxu.service.WorkingDataTxTsService;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -41,7 +41,7 @@ public class WorkingDataServiceTxTsImpl implements WorkingDataTxTsService {
             document.append("drain_id", workingDataTxTsEntities.get(i).getDrainId());
             document.append("drain_name", workingDataTxTsEntities.get(i).getDrainName());
             document.append("facility_id", workingDataTxTsEntities.get(i).getFacilityId());
-            document.append("facility_number", workingDataTxTsEntities.get(i).getFacilityNumber());
+            document.append("facility_number", workingDataTxTsEntities.get(i).getFacilityName());
             document.append("operation_concentration", workingDataTxTsEntities.get(i).getOperationConcentration());
             document.append("operating_efficiency", workingDataTxTsEntities.get(i).getOperatingEfficiency());
             document.append("create_time", workingDataTxTsEntities.get(i).getCreateTime());

@@ -1,19 +1,31 @@
-package com.huanxin.data;
+package com.sxu.data;
 
-import com.huanxin.entity.WorkingDataEntity;
-import com.huanxin.entity.WorkingDataTsMinuteEntity;
-import com.huanxin.entity.WorkingDataTxTsEntity;
+import com.sxu.entity.WorkingDataEntity;
+import com.sxu.entity.WorkingDataTsMinuteEntity;
+import com.sxu.entity.WorkingDataTxTsEntity;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 脱硫分钟数据
+ */
 public class WorkingDataTsMinuteProcess {
     private static final Logger LOGGER = Logger.getLogger(WorkingDataTsMinuteProcess.class);
 
+    /**
+     * 从工况原始数据和工况脱硫脱硝公共数据得到工况脱硫数据
+     *
+     * @param workingDataEntity       工况原始数据
+     * @param workingDataTxTsEntities 工况脱硫脱硝公共数据
+     * @return
+     */
     public static List<WorkingDataTsMinuteEntity> getWorkingDataTsMinuteEntity(WorkingDataEntity workingDataEntity, List<WorkingDataTxTsEntity> workingDataTxTsEntities) {
+        //存放4条脱硫分钟数据
         List<WorkingDataTsMinuteEntity> workingDataTsMinuteEntities = new ArrayList<>();
         for (WorkingDataTxTsEntity workingDataTxTsEntity : workingDataTxTsEntities) {
+            //工况脱硫脱硝公共数据中是关于脱硫的，则进行处理
             if ("S".equals(workingDataTxTsEntity.getPublishType())) {
                 String publishTime = workingDataTxTsEntity.getPublishTime();
                 Integer industryId = workingDataTxTsEntity.getIndustryId();
@@ -23,7 +35,7 @@ public class WorkingDataTsMinuteProcess {
                 Integer drainId = workingDataTxTsEntity.getDrainId();
                 String drainName = workingDataTxTsEntity.getDrainName();
                 Integer facilityId = workingDataTxTsEntity.getFacilityId();
-                String facilityName = workingDataTxTsEntity.getFacilityNumber();
+                String facilityName = workingDataTxTsEntity.getFacilityName();
                 Float operationConcentration = workingDataTxTsEntity.getOperationConcentration();
                 Float operatingEfficiency = workingDataTxTsEntity.getOperatingEfficiency();
 
@@ -142,6 +154,7 @@ public class WorkingDataTsMinuteProcess {
                 workingDataTsMinuteEntity.setCreateTime(createTime);
                 workingDataTsMinuteEntities.add(workingDataTsMinuteEntity);
             } else {
+                //非脱硫，跳过
                 continue;
             }
         }

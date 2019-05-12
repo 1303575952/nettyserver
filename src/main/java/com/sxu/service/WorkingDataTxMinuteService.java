@@ -1,6 +1,6 @@
-package com.huanxin.service;
+package com.sxu.service;
 
-import com.huanxin.entity.WorkingDataTxMinuteEntity;
+import com.sxu.entity.WorkingDataTxMinuteEntity;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.huanxin.constant;
+package com.sxu.constant;
 
 public class Constants {
     //时间粒度次数

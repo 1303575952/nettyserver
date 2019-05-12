@@ -1,9 +1,9 @@
-package com.huanxin.data;
+package com.sxu.data;
 
-import com.huanxin.db.JDBCConfiguration;
-import com.huanxin.entity.WorkingDataEntity;
-import com.huanxin.entity.WorkingDataTxTsEntity;
-import com.huanxin.utils.TimeUtil;
+import com.sxu.db.JDBCConfiguration;
+import com.sxu.entity.WorkingDataEntity;
+import com.sxu.entity.WorkingDataTxTsEntity;
+import com.sxu.utils.TimeUtil;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -21,14 +21,17 @@ public class WorkingDataTxTsProcess {
      * 查 basic_company 得到 区域编号region_id 行业编号industry_id 公司编号id 公司名称name
      * 查 basic_industry 得到 行业名称name
      * 查 basic_drain 得到 排口名称name
-     * 查 basic_facility 得到 设施编号facility_number
+     * 查 basic_facility 得到 设施编号id
      *
      * @param workingDataEntity
      * @return
      */
     public static List<WorkingDataTxTsEntity> getWorkingDataTxTsEntityFromWorkingData(WorkingDataEntity workingDataEntity) {
 
+        //脱硫脱硝数据放入workingDataTxTsEntities
         List<WorkingDataTxTsEntity> workingDataTxTsEntities = new ArrayList<WorkingDataTxTsEntity>();
+
+        //一条完整工况数据中脱硫脱硝公共部分
         String qiyeID = workingDataEntity.getQiyeID();
         Integer regionId = 0;
         Integer industryId = 0;
@@ -37,7 +40,7 @@ public class WorkingDataTxTsProcess {
         Connection connection = null;
         try {
             connection = JDBCConfiguration.getConn();
-            PreparedStatement queryCompany = connection.prepareStatement("select * from basic_company where license_number_simple = ?");
+            PreparedStatement queryCompany = connection.prepareStatement("select * from basic_company where license_number_simple = ? limit 1");
             queryCompany.setString(1, qiyeID);
             ResultSet queryCompanySet = queryCompany.executeQuery();
             while (queryCompanySet.next()) {
@@ -57,21 +60,23 @@ public class WorkingDataTxTsProcess {
             }
             queryIndustrySet.close();
             queryIndustry.close();
-            Integer drainId = 1;
+            Integer drainId = Integer.valueOf(workingDataEntity.getPaikoubianhao());
             String drainName = "";
-            PreparedStatement queryDrain = connection.prepareStatement("select * from basic_drain where data_from_paikoubianhao = ?");
+            PreparedStatement queryDrain = connection.prepareStatement("select * from basic_drain where data_from_paikoubianhao = ? and company_id = ?");
             queryDrain.setInt(1, drainId);
+            queryDrain.setInt(2, companyId);
             ResultSet queryDrainSet = queryDrain.executeQuery();
             while (queryDrainSet.next()) {
                 drainName = queryDrainSet.getString("name");
             }
             queryDrainSet.close();
             queryDrain.close();
-
-
             String publishTime = TimeUtil.nianyueriFormat(workingDataEntity.getNianyueri()) + " " + workingDataEntity.getShifenmiao_1();
             String createTime = workingDataEntity.getInsert_time();
 
+            /**
+             * 1机组1脱硝
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_1_a = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_1_a.setPublishTime(publishTime);
             workingDataTxTsEntity_1_a.setPublishType("N");
@@ -82,18 +87,25 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_1_a.setCompanyName(companyName);
             workingDataTxTsEntity_1_a.setDrainId(drainId);
             workingDataTxTsEntity_1_a.setDrainName(drainName);
-            Integer facilityId_1_a = 1;
-            workingDataTxTsEntity_1_a.setFacilityId(facilityId_1_a);
-            String facilityNumber_1_a = "";
-            PreparedStatement queryFacilityNumber_1_a = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_1_a.setInt(1, facilityId_1_a);
-            ResultSet queryFacilityNumber_1_aSet = queryFacilityNumber_1_a.executeQuery();
-            while (queryFacilityNumber_1_aSet.next()) {
-                facilityNumber_1_a = queryFacilityNumber_1_aSet.getString("facility_number");
+
+            String facilityName_1_a = workingDataEntity.getGongyileixingTX_1_a() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_1() +
+                    workingDataEntity.getGuolubianhao_1() +
+                    workingDataEntity.getZhilisheshibianhao_1_a();
+            PreparedStatement queryFacilityName_1_a = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_1_a.setString(1, facilityName_1_a);
+            queryFacilityName_1_a.setInt(2, companyId);
+            Integer facilityId_1_a = 0;
+            ResultSet queryFacilityName_1_aSet = queryFacilityName_1_a.executeQuery();
+            while (queryFacilityName_1_aSet.next()) {
+                facilityId_1_a = queryFacilityName_1_aSet.getInt("id");
             }
-            queryFacilityNumber_1_aSet.close();
-            queryFacilityNumber_1_a.close();
-            workingDataTxTsEntity_1_a.setFacilityNumber(facilityNumber_1_a);
+            workingDataTxTsEntity_1_a.setFacilityId(facilityId_1_a);
+
+            queryFacilityName_1_aSet.close();
+            queryFacilityName_1_a.close();
+            workingDataTxTsEntity_1_a.setFacilityName(facilityName_1_a);
             workingDataTxTsEntity_1_a.setOperationConcentration(WorkingDataModel.nOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_1(),
                     workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a(),
@@ -101,11 +113,27 @@ public class WorkingDataTxTsProcess {
                     workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_a(),
                     workingDataEntity.getAnqiliuliang_1_a()
             ));
-            workingDataTxTsEntity_1_a.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_a(),
-                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a()));
+            /*workingDataTxTsEntity_1_a.setOperatingEfficiency(
+                    WorkingDataModel.nEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a()
+                    )
+            );*/
+            workingDataTxTsEntity_1_a.setOperatingEfficiency(
+                    WorkingDataModel.nModelEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b()
+                    )
+            );
             workingDataTxTsEntity_1_a.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1_a);
 
+            /**
+             * 1机组2脱硝
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_1_b = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_1_b.setPublishTime(publishTime);
             workingDataTxTsEntity_1_b.setPublishType("N");
@@ -116,18 +144,25 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_1_b.setCompanyName(companyName);
             workingDataTxTsEntity_1_b.setDrainId(drainId);
             workingDataTxTsEntity_1_b.setDrainName(drainName);
-            Integer facilityId_1_b = 2;
-            workingDataTxTsEntity_1_b.setFacilityId(facilityId_1_b);
-            String facilityNumber_1_b = "";
-            PreparedStatement queryFacilityNumber_1_b = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_1_b.setInt(1, facilityId_1_b);
-            ResultSet queryFacilityNumber_1_bSet = queryFacilityNumber_1_b.executeQuery();
-            while (queryFacilityNumber_1_bSet.next()) {
-                facilityNumber_1_b = queryFacilityNumber_1_bSet.getString("facility_number");
+
+            String facilityName_1_b = workingDataEntity.getGongyileixingTX_1_b() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_1() +
+                    workingDataEntity.getGuolubianhao_1() +
+                    workingDataEntity.getZhilisheshibianhao_1_b();
+            PreparedStatement queryFacilityName_1_b = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_1_b.setString(1, facilityName_1_b);
+            queryFacilityName_1_b.setInt(2, companyId);
+            Integer facilityId_1_b = 0;
+            ResultSet queryFacilityName_1_bSet = queryFacilityName_1_b.executeQuery();
+            while (queryFacilityName_1_bSet.next()) {
+                facilityId_1_b = queryFacilityName_1_bSet.getInt("id");
             }
-            queryFacilityNumber_1_bSet.close();
-            queryFacilityNumber_1_b.close();
-            workingDataTxTsEntity_1_b.setFacilityNumber(facilityNumber_1_b);
+            workingDataTxTsEntity_1_b.setFacilityId(facilityId_1_b);
+
+            queryFacilityName_1_bSet.close();
+            queryFacilityName_1_b.close();
+            workingDataTxTsEntity_1_b.setFacilityName(facilityName_1_b);
             workingDataTxTsEntity_1_b.setOperationConcentration(WorkingDataModel.nOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_1(),
                     workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b(),
@@ -135,11 +170,27 @@ public class WorkingDataTxTsProcess {
                     workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_1_b(),
                     workingDataEntity.getAnqiliuliang_1_b()
             ));
-            workingDataTxTsEntity_1_b.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_b(),
-                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b()));
+            /*workingDataTxTsEntity_1_b.setOperatingEfficiency(
+                    WorkingDataModel.nEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_b(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b()
+                    )
+            );*/
+            workingDataTxTsEntity_1_b.setOperatingEfficiency(
+                    WorkingDataModel.nModelEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_1_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_1_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_1_b()
+                    )
+            );
             workingDataTxTsEntity_1_b.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1_b);
 
+            /**
+             * 1机组脱硫
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_1 = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_1.setPublishTime(publishTime);
             workingDataTxTsEntity_1.setPublishType("S");
@@ -150,18 +201,24 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_1.setCompanyName(companyName);
             workingDataTxTsEntity_1.setDrainId(drainId);
             workingDataTxTsEntity_1.setDrainName(drainName);
-            Integer facilityId_1 = 3;
-            workingDataTxTsEntity_1.setFacilityId(facilityId_1);
-            String facilityNumber_1 = "";
-            PreparedStatement queryFacilityNumber_1 = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_1.setInt(1, facilityId_1);
-            ResultSet queryFacilityNumber_1Set = queryFacilityNumber_1.executeQuery();
-            while (queryFacilityNumber_1Set.next()) {
-                facilityNumber_1 = queryFacilityNumber_1Set.getString("facility_number");
+
+            String facilityName_1 = workingDataEntity.getGongyileixingTS_1() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_1() +
+                    workingDataEntity.getGuolubianhao_1();
+            PreparedStatement queryFacilityName_1 = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_1.setString(1, facilityName_1);
+            queryFacilityName_1.setInt(2, companyId);
+            Integer facilityId_1 = 0;
+            ResultSet queryFacilityName_1Set = queryFacilityName_1.executeQuery();
+            while (queryFacilityName_1Set.next()) {
+                facilityId_1 = queryFacilityName_1Set.getInt("id");
             }
-            queryFacilityNumber_1Set.close();
-            queryFacilityNumber_1.close();
-            workingDataTxTsEntity_1.setFacilityNumber(facilityNumber_1);
+            workingDataTxTsEntity_1.setFacilityId(facilityId_1);
+
+            queryFacilityName_1Set.close();
+            queryFacilityName_1.close();
+            workingDataTxTsEntity_1.setFacilityName(facilityName_1);
             workingDataTxTsEntity_1.setOperationConcentration(WorkingDataModel.sOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_1(),
                     workingDataEntity.getRukouliunongdu_1(),
@@ -176,13 +233,27 @@ public class WorkingDataTxTsProcess {
                             workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_1()
                     )
             ));
-            workingDataTxTsEntity_1.setOperatingEfficiency(WorkingDataModel.sEfficiency(workingDataEntity.getChukouliunongdu_1(),
+            /*workingDataTxTsEntity_1.setOperatingEfficiency(
+                    WorkingDataModel.sEfficiency(workingDataEntity.getChukouliunongdu_1(),
                     workingDataEntity.getChukouyanqiliang_1(),
                     workingDataEntity.getRukouliunongdu_1(),
-                    workingDataEntity.getRukouyanqiliang_1()));
+                    workingDataEntity.getRukouyanqiliang_1()
+                    )
+            );*/
+            workingDataTxTsEntity_1.setOperatingEfficiency(
+                    WorkingDataModel.sModelEfficiency(
+                            workingDataEntity.getRukouyanqiliang_1(),
+                            workingDataEntity.getChukouyanqiliang_1(),
+                            workingDataEntity.getRukouliunongdu_1(),
+                            workingDataEntity.getChukouliunongdu_1()
+                    )
+            );
             workingDataTxTsEntity_1.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_1);
 
+            /**
+             * 2机组1脱硝
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_2_a = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_2_a.setPublishTime(publishTime);
             workingDataTxTsEntity_2_a.setPublishType("N");
@@ -193,18 +264,25 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_2_a.setCompanyName(companyName);
             workingDataTxTsEntity_2_a.setDrainId(drainId);
             workingDataTxTsEntity_2_a.setDrainName(drainName);
-            Integer facilityId_2_a = 4;
-            workingDataTxTsEntity_2_a.setFacilityId(facilityId_2_a);
-            String facilityNumber_2_a = "";
-            PreparedStatement queryFacilityNumber_2_a = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_2_a.setInt(1, facilityId_2_a);
-            ResultSet queryFacilityNumber_2_aSet = queryFacilityNumber_2_a.executeQuery();
-            while (queryFacilityNumber_2_aSet.next()) {
-                facilityNumber_2_a = queryFacilityNumber_2_aSet.getString("facility_number");
+
+            String facilityName_2_a = workingDataEntity.getGongyileixingTX_2_a() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_2() +
+                    workingDataEntity.getGuolubianhao_2() +
+                    workingDataEntity.getZhilisheshibianhao_2_a();
+            PreparedStatement queryFacilityName_2_a = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_2_a.setString(1, facilityName_2_a);
+            queryFacilityName_2_a.setInt(2, companyId);
+            Integer facilityId_2_a = 0;
+            ResultSet queryFacilityName_2_aSet = queryFacilityName_2_a.executeQuery();
+            while (queryFacilityName_2_aSet.next()) {
+                facilityId_2_a = queryFacilityName_2_aSet.getInt("id");
             }
-            queryFacilityNumber_2_aSet.close();
-            queryFacilityNumber_2_a.close();
-            workingDataTxTsEntity_2_a.setFacilityNumber(facilityNumber_2_a);
+            workingDataTxTsEntity_2_a.setFacilityId(facilityId_2_a);
+
+            queryFacilityName_2_aSet.close();
+            queryFacilityName_2_a.close();
+            workingDataTxTsEntity_2_a.setFacilityName(facilityName_2_a);
             workingDataTxTsEntity_2_a.setOperationConcentration(WorkingDataModel.nOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_2(),
                     workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a(),
@@ -212,11 +290,27 @@ public class WorkingDataTxTsProcess {
                     workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_a(),
                     workingDataEntity.getAnqiliuliang_2_a()
             ));
-            workingDataTxTsEntity_2_a.setOperatingEfficiency(WorkingDataModel.nEfficiency(workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_a(),
-                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a()));
+            /*workingDataTxTsEntity_2_a.setOperatingEfficiency(
+                    WorkingDataModel.nEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_a(),
+                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a()
+                    )
+            );*/
+            workingDataTxTsEntity_2_a.setOperatingEfficiency(
+                    WorkingDataModel.nModelEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b()
+                    )
+            );
             workingDataTxTsEntity_2_a.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2_a);
 
+            /**
+             * 2机组2脱硝
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_2_b = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_2_b.setPublishTime(publishTime);
             workingDataTxTsEntity_2_b.setPublishType("N");
@@ -227,18 +321,25 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_2_b.setCompanyName(companyName);
             workingDataTxTsEntity_2_b.setDrainId(drainId);
             workingDataTxTsEntity_2_b.setDrainName(drainName);
-            Integer facilityId_2_b = 5;
-            workingDataTxTsEntity_2_b.setFacilityId(facilityId_2_b);
-            String facilityNumber_2_b = "";
-            PreparedStatement queryFacilityNumber_2_b = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_2_b.setInt(1, facilityId_2_b);
-            ResultSet queryFacilityNumber_2_bSet = queryFacilityNumber_2_b.executeQuery();
-            while (queryFacilityNumber_2_bSet.next()) {
-                facilityNumber_2_b = queryFacilityNumber_2_bSet.getString("facility_number");
+
+            String facilityName_2_b = workingDataEntity.getGongyileixingTX_2_b() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_2() +
+                    workingDataEntity.getGuolubianhao_2() +
+                    workingDataEntity.getZhilisheshibianhao_2_b();
+            PreparedStatement queryFacilityName_2_b = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_2_b.setString(1, facilityName_2_b);
+            queryFacilityName_2_b.setInt(2, companyId);
+            Integer facilityId_2_b = 0;
+            ResultSet queryFacilityName_2_bSet = queryFacilityName_2_b.executeQuery();
+            while (queryFacilityName_2_bSet.next()) {
+                facilityId_2_b = queryFacilityName_2_bSet.getInt("id");
             }
-            queryFacilityNumber_2_bSet.close();
-            queryFacilityNumber_2_b.close();
-            workingDataTxTsEntity_2_b.setFacilityNumber(facilityNumber_2_b);
+            workingDataTxTsEntity_2_b.setFacilityId(facilityId_2_b);
+
+            queryFacilityName_2_bSet.close();
+            queryFacilityName_2_b.close();
+            workingDataTxTsEntity_2_b.setFacilityName(facilityName_2_b);
             workingDataTxTsEntity_2_b.setOperationConcentration(WorkingDataModel.nOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_2(),
                     workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b(),
@@ -246,12 +347,27 @@ public class WorkingDataTxTsProcess {
                     workingDataEntity.getSCRfanyingqiXjinkouyanqiwendu1_2_b(),
                     workingDataEntity.getAnqiliuliang_2_b()
             ));
-            workingDataTxTsEntity_2_b.setOperatingEfficiency(WorkingDataModel.nEfficiency(
-                    workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_b(),
-                    workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b()));
+            /*workingDataTxTsEntity_2_b.setOperatingEfficiency(
+                    WorkingDataModel.nEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b()
+                    )
+            );*/
+            workingDataTxTsEntity_2_b.setOperatingEfficiency(
+                    WorkingDataModel.nModelEfficiency(
+                            workingDataEntity.getSCRfanyingqichukouyanqiNOXnongdu_2_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_a(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoliuliang_2_b(),
+                            workingDataEntity.getSCRfanyingqiXAIGqianyandaoyanqiNOXnongdu_2_b()
+                    )
+            );
             workingDataTxTsEntity_2_b.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2_b);
 
+            /**
+             * 2机组脱硫
+             */
             WorkingDataTxTsEntity workingDataTxTsEntity_2 = new WorkingDataTxTsEntity();
             workingDataTxTsEntity_2.setPublishTime(publishTime);
             workingDataTxTsEntity_2.setPublishType("S");
@@ -262,18 +378,24 @@ public class WorkingDataTxTsProcess {
             workingDataTxTsEntity_2.setCompanyName(companyName);
             workingDataTxTsEntity_2.setDrainId(drainId);
             workingDataTxTsEntity_2.setDrainName(drainName);
-            Integer facilityId_2 = 6;
-            workingDataTxTsEntity_2.setFacilityId(facilityId_2);
-            String facilityNumber_2 = "";
-            PreparedStatement queryFacilityNumber_2 = connection.prepareStatement("select * from basic_facility where id = ?");
-            queryFacilityNumber_2.setInt(1, facilityId_2);
-            ResultSet queryFacilityNumber_2Set = queryFacilityNumber_2.executeQuery();
-            while (queryFacilityNumber_2Set.next()) {
-                facilityNumber_2 = queryFacilityNumber_2Set.getString("facility_number");
+
+            String facilityName_2 = workingDataEntity.getGongyileixingTS_2() +
+                    "-" +
+                    workingDataEntity.getJizubianhao_2() +
+                    workingDataEntity.getGuolubianhao_2();
+            PreparedStatement queryFacilityName_2 = connection.prepareStatement("select * from basic_facility where name = ? and company_id = ?");
+            queryFacilityName_2.setString(1, facilityName_2);
+            queryFacilityName_2.setInt(2, companyId);
+            Integer facilityId_2 = 0;
+            ResultSet queryFacilityName_2Set = queryFacilityName_2.executeQuery();
+            while (queryFacilityName_2Set.next()) {
+                facilityId_2 = queryFacilityName_2Set.getInt("id");
             }
-            queryFacilityNumber_2Set.close();
-            queryFacilityNumber_2.close();
-            workingDataTxTsEntity_2.setFacilityNumber(facilityNumber_2);
+            workingDataTxTsEntity_2.setFacilityId(facilityId_2);
+
+            queryFacilityName_2Set.close();
+            queryFacilityName_2.close();
+            workingDataTxTsEntity_2.setFacilityName(facilityName_2);
             workingDataTxTsEntity_2.setOperationConcentration(WorkingDataModel.sOperationConcentration(
                     workingDataEntity.getRukouyanqiliang_2(),
                     workingDataEntity.getRukouliunongdu_2(),
@@ -288,10 +410,22 @@ public class WorkingDataTxTsProcess {
                             workingDataEntity.getNo4xunhuanbengkaiguanzhuangtai_2()
                     )
             ));
-            workingDataTxTsEntity_2.setOperatingEfficiency(WorkingDataModel.sEfficiency(workingDataEntity.getChukouliunongdu_2(),
-                    workingDataEntity.getChukouyanqiliang_2(),
-                    workingDataEntity.getRukouliunongdu_2(),
-                    workingDataEntity.getRukouyanqiliang_2()));
+            /*workingDataTxTsEntity_2.setOperatingEfficiency(
+                    WorkingDataModel.sEfficiency(
+                            workingDataEntity.getChukouliunongdu_2(),
+                            workingDataEntity.getChukouyanqiliang_2(),
+                            workingDataEntity.getRukouliunongdu_2(),
+                            workingDataEntity.getRukouyanqiliang_2()
+                    )
+            );*/
+            workingDataTxTsEntity_2.setOperatingEfficiency(
+                    WorkingDataModel.sModelEfficiency(
+                            workingDataEntity.getRukouyanqiliang_2(),
+                            workingDataEntity.getChukouyanqiliang_2(),
+                            workingDataEntity.getRukouliunongdu_2(),
+                            workingDataEntity.getChukouliunongdu_2()
+                    )
+            );
             workingDataTxTsEntity_2.setCreateTime(createTime);
             workingDataTxTsEntities.add(workingDataTxTsEntity_2);
 

@@ -1,8 +1,8 @@
-package com.huanxin.server;
+package com.sxu.server;
 
-import com.huanxin.common.MiddleWare;
-import com.huanxin.utils.DataConversion;
-import com.huanxin.utils.Variable;
+import com.sxu.common.MiddleWare;
+import com.sxu.utils.DataConversion;
+import com.sxu.utils.Variable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.ReadTimeoutException;
 import org.apache.log4j.Logger;

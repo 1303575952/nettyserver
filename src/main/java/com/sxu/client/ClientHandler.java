@@ -1,7 +1,7 @@
-package com.huanxin.client;
+package com.sxu.client;
 
-import com.huanxin.common.MiddleWare;
-import com.huanxin.utils.DataConversion;
+import com.sxu.common.MiddleWare;
+import com.sxu.utils.DataConversion;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

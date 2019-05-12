@@ -1,4 +1,4 @@
-package com.huanxin.common;
+package com.sxu.common;
 
 /**
  * 服务端接收消息，根据消息头判断消息类别

@@ -1,4 +1,4 @@
-package com.huanxin.db;
+package com.sxu.db;
 
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
@@ -8,19 +8,19 @@ import org.bson.Document;
 
 public class MongoDBConfiguration {
     private static final Logger LOGGER = Logger.getLogger(MongoDBConfiguration.class);
-    public static final String HOST = "dds-****************-pub.mongodb.rds.aliyuncs.com";
-    public static final int PORT = 3717;
-    public static String USERNAME = "root";
-    public static String PASSWORD = "**********";
-    public static String AUTHENTICATION_DATABASE = "admin";
-    public static String DATABASE_NAME = "*******";
+    private static final String HOST = "dds-***-pub.mongodb.rds.aliyuncs.com";
+    private static final int PORT = 3717;
+    private static String USERNAME = "root";
+    private static String PASSWORD = "***!";
+    private static String AUTHENTICATION_DATABASE = "admin";
+    public static String DATABASE_NAME = "hx";
 
     public static String COLLECTION_NAME_COMPANY = "source_company_jin_neng_re_dian";
     public static String COLLECTION_NAME_TX_TS = "company_industry_monitor_common_minute";
     public static String COLLECTION_NAME_TX_MINUTE = "company_industry_monitor_nitre_minute";
     public static String COLLECTION_NAME_TS_MINUTE = "company_industry_monitor_sulfur_minute";
 
-    public static ServerAddress serverAddress = new ServerAddress(HOST, PORT);
+    private static ServerAddress serverAddress = new ServerAddress(HOST, PORT);
 
     public static MongoClient createMongoDBClient() {
         //mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]

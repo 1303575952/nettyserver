@@ -1,4 +1,4 @@
-package com.huanxin.entity;
+package com.sxu.entity;
 
 import lombok.*;
 

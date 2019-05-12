@@ -1,8 +1,8 @@
-package com.huanxin.data;
+package com.sxu.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.huanxin.utils.HttpClientUtil;
+import com.sxu.utils.HttpClientUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,9 +118,6 @@ public class WorkingDataModel {
         return Float.valueOf(s);
     }
 
-    public static void main(String[] args) {
-        System.out.println(liquidGasRatio(1,1,1,1,1,1,1,"1"));
-    }
 
     /**
      * 脱硫，液气比
@@ -162,7 +159,7 @@ public class WorkingDataModel {
     }
 
     /**
-     * 脱硝直接计算
+     * 脱硝效率，直接计算
      *
      * @param nChukouNoxnongdu
      * @param nRukouNoxnongdu
@@ -180,7 +177,7 @@ public class WorkingDataModel {
     }
 
     /**
-     * 脱硝直接计算
+     * 脱硫效率，直接计算
      *
      * @param sChukounongdu
      * @param sChukouyanqiliang
@@ -199,5 +196,71 @@ public class WorkingDataModel {
         }
     }
 
+    /**
+     * 脱硝效率，进模型计算
+     *
+     * @param NOxOutDen_All
+     * @param gasInVol_A
+     * @param NOxInDen_A
+     * @param gasInVol_B
+     * @param NOxInDen_B
+     * @return
+     */
+    public static float nModelEfficiency(float NOxOutDen_All, float gasInVol_A, float NOxInDen_A, float gasInVol_B, float NOxInDen_B) {
+        Map param = new HashMap();
+
+        // 构造工况模型的参数
+        param.put("NOxOutDen_All", (long) NOxOutDen_All);
+        param.put("gasInVol_A", String.valueOf(gasInVol_A));
+        param.put("NOxInDen_A", String.valueOf(NOxInDen_A));
+        param.put("gasInVol_B", String.valueOf(gasInVol_B));
+        param.put("NOxInDen_B", String.valueOf(NOxInDen_B));
+
+        // 工况模型接口的调用
+        String result = HttpClientUtil.httpGetWithJSON("http://39.96.33.44:8081/renren-api/jnrdgk/tuoxiao_ratio", param);
+
+        //System.out.println("result:" + result);
+
+        // 对返回的 Json 进行解析
+        Map<String, Object> parsemap = JSON.parseObject(result, new TypeReference<Map<String, Object>>() {
+        });
+        String s = parsemap.get("NOxEffi").toString();
+        return Float.valueOf(s);
+    }
+
+    /**
+     * 脱硫，进模型计算
+     *
+     * @param gasInVol
+     * @param gasOutVol
+     * @param SO2InDen
+     * @param SO2OutDen
+     * @return
+     */
+    public static float sModelEfficiency(float gasInVol, float gasOutVol, float SO2InDen, float SO2OutDen) {
+        Map param = new HashMap();
+
+        // 构造工况模型的参数
+        param.put("gasInVol", (long) gasInVol);
+        param.put("gasOutVol", String.valueOf(gasOutVol));
+        param.put("SO2InDen", String.valueOf(SO2InDen));
+        param.put("SO2OutDen", String.valueOf(SO2OutDen));
+
+        // 工况模型接口的调用
+        String result = HttpClientUtil.httpGetWithJSON("http://39.96.33.44:8081/renren-api/jnrdgk/tuoliu_ratio", param);
+
+        //System.out.println("result:" + result);
+
+        // 对返回的 Json 进行解析
+        Map<String, Object> parsemap = JSON.parseObject(result, new TypeReference<Map<String, Object>>() {
+        });
+        String s = parsemap.get("ratio").toString();
+        return Float.valueOf(s);
+    }
+
+    public static void main(String[] args) {
+        //System.out.println(nModelEfficiency(2, 1, 1, 1, 1));
+        System.out.println(sModelEfficiency(2, 1, 1, 1));
+    }
 
 }

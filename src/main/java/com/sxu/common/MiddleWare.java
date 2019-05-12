@@ -1,12 +1,12 @@
-package com.huanxin.common;
+package com.sxu.common;
 
-import com.huanxin.constant.Constants;
-import com.huanxin.message.TimeSynFailed;
-import com.huanxin.message.TimeSynSuccess;
-import com.huanxin.message.WorkingData;
-import com.huanxin.constant.Instruction;
-import com.huanxin.utils.DataConversion;
-import com.huanxin.utils.Variable;
+import com.sxu.constant.Constants;
+import com.sxu.message.TimeSynFailed;
+import com.sxu.message.TimeSynSuccess;
+import com.sxu.message.WorkingData;
+import com.sxu.constant.Instruction;
+import com.sxu.utils.DataConversion;
+import com.sxu.utils.Variable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
  */
 public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = Logger.getLogger(MiddleWare.class);
-    protected String name;
     //记录发送同步时间指令次数
     private int timeSynCount = 0;
     //记录服务端发送心跳指令次数
@@ -35,7 +34,7 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
         LOGGER.debug("msgStr.length() < Constants.WORKING_DATA_LENGTH--" + (msgStr.length() < Constants.WORKING_DATA_LENGTH));
         LOGGER.debug("Constants.isAssemble--" + Constants.isAssemble);
         /**
-         * 符合条件则执行拼包
+         * 处理拆包问题，符合条件则执行拼包
          */
         if ((msgStr.startsWith(Type.WORKING_DATA_HEAD) && (msgStr.length() < Constants.WORKING_DATA_LENGTH)) || Constants.isAssemble) {
             Constants.isAssemble = true;
@@ -43,13 +42,12 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
             if (Constants.packingStr.length() == Constants.WORKING_DATA_LENGTH) {
                 //拼包完成
                 LOGGER.debug("拼装后的数据：" + Constants.packingStr);
-
                 byte[] workingDataByteArr = DataConversion.hexStringArr2ByteArr(DataConversion.hexString2HexStringArr(Constants.packingStr.toString()));
                 WorkingData.workingDataProcess(workingDataByteArr);
                 Constants.packingStr = new StringBuffer("");
                 Constants.isAssemble = false;
             } else if (Constants.packingStr.length() > Constants.WORKING_DATA_LENGTH) {
-                //拼包过长失败
+                //如果拼包后，包的长度太长失败
                 Constants.packingStr = new StringBuffer("");
                 Constants.isAssemble = false;
             }
@@ -59,7 +57,7 @@ public abstract class MiddleWare extends ChannelInboundHandlerAdapter {
          * 正常指令，未出现拆包
          */
         if (msgStr.startsWith(Type.WORKING_DATA_HEAD)) {
-            //接收到的消息为工况数据指令
+            //接收到的消息为工况数据指令，处理工况数据
             WorkingData.workingDataProcess(msg);
         } else if (msgStr.startsWith(Type.TIME_SYN_HEAD)) {
             //发送的消息为授时指令

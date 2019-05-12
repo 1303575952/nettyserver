@@ -1,6 +1,6 @@
-package com.huanxin.server;
+package com.sxu.server;
 
-import com.huanxin.constant.Constants;
+import com.sxu.constant.Constants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

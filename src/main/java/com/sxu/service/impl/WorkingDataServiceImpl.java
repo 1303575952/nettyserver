@@ -1,8 +1,8 @@
-package com.huanxin.service.impl;
+package com.sxu.service.impl;
 
-import com.huanxin.db.MongoDBConfiguration;
-import com.huanxin.service.WorkingDataService;
-import com.huanxin.entity.WorkingDataEntity;
+import com.sxu.db.MongoDBConfiguration;
+import com.sxu.service.WorkingDataService;
+import com.sxu.entity.WorkingDataEntity;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;

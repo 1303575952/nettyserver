@@ -1,4 +1,4 @@
-package com.huanxin.client;
+package com.sxu.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -53,7 +53,7 @@ public class Client {
                     channel = channelFuture.channel();
                     LOGGER.debug("连接成功");
                 } else {
-                    LOGGER.debug("每隔10s重连....");
+                    LOGGER.debug("客户端每隔10s重连....");
                     channelFuture.channel().eventLoop().schedule(new Runnable() {
                         public void run() {
                             doConnect();
